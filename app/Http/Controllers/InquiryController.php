@@ -17,7 +17,20 @@ class InquiryController extends Controller
     public function home()
     {
         $classes = TuitionClass::all();
-        return view('home', compact('classes'));
+        $teachers = \App\Models\Teacher::where('is_active', true)->with('branch')->get();
+
+        // Collect unique subjects from all active classes
+        $subjects = $classes->pluck('subject')
+            ->flatMap(fn($s) => array_map('trim', explode(',', $s)))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $studentCount = \App\Models\Student::count();
+        $teacherCount = $teachers->count();
+        $subjectCount = $subjects->count();
+
+        return view('home', compact('classes', 'teachers', 'subjects', 'studentCount', 'teacherCount', 'subjectCount'));
     }
 
     public function create()

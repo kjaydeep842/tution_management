@@ -6,8 +6,8 @@
     </div>
 
     @php
-        $totalDue = $fees->where('status', '!=', 'paid')->sum('amount_due');
-        $totalPaid = $fees->where('status', 'paid')->sum('amount_due');
+        $totalDue = $fees->where('status', '!=', 'paid')->sum('amount');
+        $totalPaid = $fees->where('status', 'paid')->sum('amount');
     @endphp
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
@@ -35,8 +35,8 @@
                 <tbody>
                     @foreach($fees as $fee)
                         <tr>
-                            <td style="font-weight:600; color:#0f172a;">{{ $fee->month ?? '—' }}</td>
-                            <td style="color:#374151;">₹{{ number_format($fee->amount_due, 2) }}</td>
+                            <td style="font-weight:600; color:#0f172a;">{{ $fee->fee_type ?? '—' }}</td>
+                            <td style="color:#374151;">₹{{ number_format($fee->amount, 2) }}</td>
                             <td style="color:#64748b; font-size:13px;">
                                 {{ $fee->due_date ? \Carbon\Carbon::parse($fee->due_date)->format('d M Y') : '—' }}
                             </td>

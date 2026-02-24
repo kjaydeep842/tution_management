@@ -140,6 +140,8 @@
                 class="{{ request()->routeIs('parent.attendance') ? 'active' : '' }}">Attendance</a>
             <a href="{{ route('parent.fees') }}"
                 class="{{ request()->routeIs('parent.fees') ? 'active' : '' }}">Fees</a>
+            <a href="{{ route('parent.profile') }}"
+                class="{{ request()->routeIs('parent.profile') ? 'active' : '' }}">Profile</a>
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
             <span class="user-badge">{{ auth()->user()->name }}</span>

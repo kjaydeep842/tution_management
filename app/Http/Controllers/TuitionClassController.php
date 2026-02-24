@@ -46,6 +46,7 @@ class TuitionClassController extends Controller
             'branch_ids' => 'nullable|array',
             'branch_ids.*' => 'exists:branches,id',
             'schedule_info' => 'nullable|string',
+            'class_time' => 'nullable|date_format:H:i',
         ]);
 
         // Store subject as comma-separated for display, branch_ids as JSON
@@ -60,6 +61,7 @@ class TuitionClassController extends Controller
             'branch_id' => $primaryBranch,
             'branch_ids' => $branchIds,
             'schedule_info' => $validated['schedule_info'] ?? null,
+            'class_time' => $validated['class_time'] ?? null,
         ]);
 
         return redirect()->route('tuition-classes.index')->with('success', 'Batch created successfully.');
@@ -83,6 +85,7 @@ class TuitionClassController extends Controller
             'branch_ids' => 'nullable|array',
             'branch_ids.*' => 'exists:branches,id',
             'schedule_info' => 'nullable|string',
+            'class_time' => 'nullable|date_format:H:i',
         ]);
 
         $subjects = $request->input('subjects', []);
@@ -96,6 +99,7 @@ class TuitionClassController extends Controller
             'branch_id' => $primaryBranch,
             'branch_ids' => $branchIds,
             'schedule_info' => $validated['schedule_info'] ?? null,
+            'class_time' => $validated['class_time'] ?? null,
         ]);
 
         return redirect()->route('tuition-classes.index')->with('success', 'Batch updated successfully.');

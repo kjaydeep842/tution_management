@@ -39,6 +39,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Student Management
     Route::resource('students', StudentController::class);
 
+    // Parent Management
+    Route::resource('parents', \App\Http\Controllers\Admin\ParentManagementController::class)->names('admin.parents');
+
     // Tuition Class Management
     Route::resource('tuition-classes', TuitionClassController::class);
 
@@ -77,6 +80,8 @@ Route::middleware(['auth', 'verified', 'parent.portal'])->prefix('parent')->name
     Route::get('/dashboard', [\App\Http\Controllers\ParentController::class, 'dashboard'])->name('dashboard');
     Route::get('/attendance', [\App\Http\Controllers\ParentController::class, 'attendance'])->name('attendance');
     Route::get('/fees', [\App\Http\Controllers\ParentController::class, 'fees'])->name('fees');
+    Route::get('/profile', [\App\Http\Controllers\ParentController::class, 'profile'])->name('profile');
+    Route::post('/profile', [\App\Http\Controllers\ParentController::class, 'updateProfile'])->name('profile.update');
 });
 
 

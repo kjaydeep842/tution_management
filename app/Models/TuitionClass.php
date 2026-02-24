@@ -13,7 +13,8 @@ class TuitionClass extends Model
         'teacher_id',
         'branch_id',
         'branch_ids',
-        'schedule_info'
+        'schedule_info',
+        'class_time',
     ];
 
     protected $casts = [

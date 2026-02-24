@@ -41,8 +41,8 @@ class ParentController extends Controller
             ->get();
 
         // Fees summary
-        $feesDue = $student->fees->where('status', '!=', 'paid')->sum('amount_due');
-        $feesPaid = $student->fees->where('status', 'paid')->sum('amount_due');
+        $feesDue = $student->fees->where('status', '!=', 'paid')->sum('amount');
+        $feesPaid = $student->fees->where('status', 'paid')->sum('amount');
 
         return view('parent.dashboard', compact(
             'student',
@@ -104,5 +104,32 @@ class ParentController extends Controller
         $student = $this->getStudent();
         $fees = $student->fees()->orderBy('created_at', 'desc')->get();
         return view('parent.fees', compact('student', 'fees'));
+    }
+
+    public function profile()
+    {
+        $student = $this->getStudent();
+        $user = auth()->user();
+        return view('parent.profile', compact('student', 'user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $user->name = $validated['name'];
+
+        if ($request->filled('password')) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully.');
     }
 }

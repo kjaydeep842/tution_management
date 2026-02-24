@@ -88,6 +88,36 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="pt-8 border-t border-gray-100">
+                            <h3 class="text-md font-700 text-gray-900 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Automation Settings
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-600 text-gray-700 mb-2">Monthly Report Day</label>
+                                    <input type="number" name="attendance_report_day" min="1" max="28"
+                                        value="{{ $settings['attendance_report_day'] ?? 1 }}"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                                    <p class="mt-2 text-[11px] text-gray-400">Day of the month to send reports
+                                        (suggested: 1-5).</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-600 text-gray-700 mb-2">Report Delivery
+                                        Time</label>
+                                    <input type="time" name="attendance_report_time"
+                                        value="{{ $settings['attendance_report_time'] ?? '00:00' }}"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                                    <p class="mt-2 text-[11px] text-gray-400">Preferred time for delivery (24h format).
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mt-10 pt-6 border-t border-gray-100 flex justify-end">
@@ -119,7 +149,8 @@
                         </div>
                         <div>
                             <div class="font-800 text-sm tracking-tight capitalize">
-                                {{ $settings['site_name'] ?? 'BrightMind' }}</div>
+                                {{ $settings['site_name'] ?? 'BrightMind' }}
+                            </div>
                             <div class="text-[10px] text-indigo-300 font-600 uppercase tracking-widest">Admin Panel
                             </div>
                         </div>

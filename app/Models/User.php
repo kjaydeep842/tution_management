@@ -77,8 +77,8 @@ class User extends Authenticatable
         return $this->role && $this->role->name === 'Parent';
     }
 
-    public function parentStudent()
+    public function students()
     {
-        return $this->hasOne(\App\Models\Student::class, 'user_id');
+        return $this->hasMany(\App\Models\Student::class, 'user_id');
     }
 }

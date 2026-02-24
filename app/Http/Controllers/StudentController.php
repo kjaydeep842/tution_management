@@ -112,6 +112,7 @@ class StudentController extends Controller
         $user = User::create([
             'name' => $student->guardian_name ?? $student->full_name . ' (Parent)',
             'email' => $email,
+            'phone' => $student->guardian_phone,
             'password' => Hash::make($password),
             'role_id' => $parentRole?->id,
         ]);

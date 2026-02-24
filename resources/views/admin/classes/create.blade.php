@@ -166,9 +166,20 @@
                     </div>
 
                     {{-- Schedule --}}
-                    <div style="grid-column:1/3;">
+                    <div>
                         <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Schedule / Timing</label>
                         <input type="text" name="schedule_info" class="input-field" value="{{ old('schedule_info') }}" placeholder="e.g. Mon/Wed/Fri – 4:00 PM to 5:30 PM">
+                    </div>
+
+                    {{-- Class Start Time (for absence cron job) --}}
+                    <div>
+                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">
+                            Class Start Time
+                            <span style="font-weight:400; color:#94a3b8;">(for absent email — sent 30 min after)</span>
+                        </label>
+                        <input type="time" name="class_time" class="input-field" value="{{ old('class_time') }}"
+                               style="max-width:200px;">
+                        @error('class_time') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>

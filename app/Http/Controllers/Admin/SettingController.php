@@ -22,6 +22,8 @@ class SettingController extends Controller
             'site_address' => 'nullable|string|max:500',
             'contact_email' => 'nullable|email|max:255',
             'site_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'attendance_report_day' => 'nullable|integer|between:1,28',
+            'attendance_report_time' => 'nullable|string|regex:/^[0-9]{2}:[0-9]{2}$/',
         ]);
 
         if ($request->has('site_name')) {
@@ -45,6 +47,14 @@ class SettingController extends Controller
 
             $path = $request->file('site_logo')->store('settings', 'public');
             Setting::updateOrCreate(['key' => 'site_logo'], ['value' => $path]);
+        }
+
+        if ($request->has('attendance_report_day')) {
+            Setting::updateOrCreate(['key' => 'attendance_report_day'], ['value' => $request->attendance_report_day]);
+        }
+
+        if ($request->has('attendance_report_time')) {
+            Setting::updateOrCreate(['key' => 'attendance_report_time'], ['value' => $request->attendance_report_time]);
         }
 
         return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
