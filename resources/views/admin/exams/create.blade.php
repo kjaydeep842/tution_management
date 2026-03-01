@@ -16,9 +16,15 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
-                    <input type="text" name="subject" required value="{{ old('subject') }}"
-                        placeholder="e.g. Mathematics"
+                    <select name="subject" required
                         class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Select Subject</option>
+                        @foreach($subjects as $subject)
+                            <option value="{{ $subject }}" {{ old('subject') == $subject ? 'selected' : '' }}>
+                                {{ $subject }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Class *</label>
@@ -27,7 +33,8 @@
                         <option value="">Select Class</option>
                         @foreach($classes as $class)
                             <option value="{{ $class->id }}" {{ old('tuition_class_id') == $class->id ? 'selected' : '' }}>
-                                {{ $class->name }}</option>
+                                {{ $class->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -38,16 +45,30 @@
                     <input type="date" name="exam_date" required value="{{ old('exam_date') }}"
                         class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Start Time</label>
+                        <input type="time" name="start_time" value="{{ old('start_time') }}"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">End Time</label>
+                        <input type="time" name="end_time" value="{{ old('end_time') }}"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Total Marks *</label>
                     <input type="number" name="total_marks" required value="{{ old('total_marks', 100) }}" min="1"
                         class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Passing Marks</label>
-                <input type="number" name="passing_marks" value="{{ old('passing_marks', 35) }}" min="0"
-                    class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Passing Marks</label>
+                    <input type="number" name="passing_marks" value="{{ old('passing_marks', 35) }}" min="0"
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
             </div>
         </div>
         <div class="mt-6 flex justify-end space-x-4">

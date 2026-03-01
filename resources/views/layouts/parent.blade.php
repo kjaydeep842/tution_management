@@ -138,8 +138,12 @@
                 class="{{ request()->routeIs('parent.dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('parent.attendance') }}"
                 class="{{ request()->routeIs('parent.attendance') ? 'active' : '' }}">Attendance</a>
+            <a href="{{ route('parent.exams') }}"
+                class="{{ request()->routeIs('parent.exams') ? 'active' : '' }}">Exams</a>
             <a href="{{ route('parent.fees') }}"
                 class="{{ request()->routeIs('parent.fees') ? 'active' : '' }}">Fees</a>
+            <a href="{{ route('parent.performance') }}"
+                class="{{ request()->routeIs('parent.performance') ? 'active' : '' }}">Performance</a>
             <a href="{{ route('parent.profile') }}"
                 class="{{ request()->routeIs('parent.profile') ? 'active' : '' }}">Profile</a>
         </div>

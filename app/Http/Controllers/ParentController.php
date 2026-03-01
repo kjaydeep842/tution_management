@@ -106,6 +106,25 @@ class ParentController extends Controller
         return view('parent.fees', compact('student', 'fees'));
     }
 
+    public function performance()
+    {
+        $student = $this->getStudent();
+        $reports = \App\Models\PerformanceReport::where('student_id', $student->id)
+            ->with('teacher')
+            ->orderBy('report_date', 'desc')
+            ->get();
+        return view('parent.performance', compact('student', 'reports'));
+    }
+
+    public function exams()
+    {
+        $student = $this->getStudent();
+        $examMarks = \App\Models\ExamMark::with('exam.tuitionClass')
+            ->where('student_id', $student->id)
+            ->get();
+        return view('parent.exams', compact('student', 'examMarks'));
+    }
+
     public function profile()
     {
         $student = $this->getStudent();

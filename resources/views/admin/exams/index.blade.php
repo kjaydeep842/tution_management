@@ -35,8 +35,15 @@
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $exam->tuitionClass->name }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">
-                            {{ \Carbon\Carbon::parse($exam->exam_date)->format('d M Y') }}</td>
-                        <td class="px-6 py-4 text-sm font-mono font-bold text-gray-900">{{ $exam->total_marks }}</td>
+                            {{ \Carbon\Carbon::parse($exam->exam_date)->format('d M Y') }}
+                            @if($exam->start_time)
+                                <div class="text-[10px] text-gray-400">
+                                    {{ \Carbon\Carbon::parse($exam->start_time)->format('h:i A') }} -
+                                    {{ \Carbon\Carbon::parse($exam->end_time)->format('h:i A') }}
+                                </div>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-sm font-mono font-bold text-gray-900">{{ (float) $exam->total_marks }}</td>
                         <td class="px-6 py-4 text-right space-x-3">
                             <a href="{{ route('exams.marks', $exam) }}"
                                 class="text-xs px-3 py-1.5 bg-green-50 text-green-700 font-bold rounded-lg hover:bg-green-100 transition-colors">Enter

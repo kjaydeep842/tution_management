@@ -19,7 +19,17 @@ class ExamController extends Controller
     public function create()
     {
         $classes = TuitionClass::all();
-        return view('admin.exams.create', compact('classes'));
+
+        // Get all subjects, split them if they are comma-separated, and get unique values
+        $subjects = TuitionClass::pluck('subject')
+            ->flatMap(fn($item) => explode(',', $item))
+            ->map(fn($item) => trim($item))
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values();
+
+        return view('admin.exams.create', compact('classes', 'subjects'));
     }
 
     public function store(Request $request)
@@ -29,6 +39,8 @@ class ExamController extends Controller
             'name' => 'required|string|max:255',
             'subject' => 'required|string|max:255',
             'exam_date' => 'required|date',
+            'start_time' => 'nullable',
+            'end_time' => 'nullable',
             'total_marks' => 'required|numeric|min:1',
             'passing_marks' => 'nullable|numeric|min:0',
         ]);

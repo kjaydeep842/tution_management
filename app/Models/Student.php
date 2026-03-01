@@ -52,6 +52,11 @@ class Student extends Model
         return $this->hasMany(ExamMark::class);
     }
 
+    public function parentUser()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";

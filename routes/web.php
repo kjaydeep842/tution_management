@@ -73,6 +73,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Create Parent Account for a student
     Route::post('/students/{student}/create-parent', [StudentController::class, 'createParentAccount'])->name('students.create-parent');
+
+    // Performance Reports
+    Route::get('/performance-reports', [App\Http\Controllers\PerformanceReportController::class, 'index'])->name('performance-reports.index');
+    Route::get('/performance-reports/{student}/create', [App\Http\Controllers\PerformanceReportController::class, 'create'])->name('performance-reports.create');
+    Route::post('/performance-reports/{student}', [App\Http\Controllers\PerformanceReportController::class, 'store'])->name('performance-reports.store');
+    Route::get('/performance-reports/{report}/download', [App\Http\Controllers\PerformanceReportController::class, 'download'])->name('performance-reports.download');
 });
 
 // Parent Portal (separate middleware group)
@@ -80,6 +86,9 @@ Route::middleware(['auth', 'verified', 'parent.portal'])->prefix('parent')->name
     Route::get('/dashboard', [\App\Http\Controllers\ParentController::class, 'dashboard'])->name('dashboard');
     Route::get('/attendance', [\App\Http\Controllers\ParentController::class, 'attendance'])->name('attendance');
     Route::get('/fees', [\App\Http\Controllers\ParentController::class, 'fees'])->name('fees');
+    Route::get('/performance', [\App\Http\Controllers\ParentController::class, 'performance'])->name('performance');
+    Route::get('/performance/{report}/download', [App\Http\Controllers\PerformanceReportController::class, 'download'])->name('performance.download');
+    Route::get('/exams', [\App\Http\Controllers\ParentController::class, 'exams'])->name('exams');
     Route::get('/profile', [\App\Http\Controllers\ParentController::class, 'profile'])->name('profile');
     Route::post('/profile', [\App\Http\Controllers\ParentController::class, 'updateProfile'])->name('profile.update');
 });
