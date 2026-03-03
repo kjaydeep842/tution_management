@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\AttendanceAbsentMail;
 use App\Models\Attendance;
 use App\Models\TuitionClass;
+use App\Services\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -78,7 +79,8 @@ class NotifyAbsentStudents extends Command
 
             foreach ($absentRecords as $record) {
                 $student = $record->student;
-                if (!$student) continue;
+                if (!$student)
+                    continue;
 
                 $emailTo = $student->guardian_email ?: $student->email;
 
@@ -88,19 +90,12 @@ class NotifyAbsentStudents extends Command
                 }
 
                 try {
-                    // Use send() instead of queue() since a queue worker might not be running
-                    Mail::to($emailTo)->send(new AttendanceAbsentMail(
-                        $student,
-                        $today,
-                        $tuitionClass->name
-                    ));
-
-                    // Mark as notified so we don't send again
-                    $record->update(['notified_at' => now()]);
+                    $notificationService = new NotificationService();
+                    $notificationService->sendAttendanceNotification($record, ['email', 'whatsapp']);
 
                     $emailsSent++;
-                    $this->line("   📧 Email sent → Roll #{$student->roll_no} – {$student->full_name} → {$emailTo}");
-                    Log::info("AbsentNotify (Scheduled): Sent to {$emailTo} for student {$student->id} ({$student->full_name}), class {$tuitionClass->name}, date {$today}.");
+                    $this->line("   📢 Notifications sent → Roll #{$student->roll_no} – {$student->full_name}");
+                    Log::info("AbsentNotify (Scheduled): Sent to student {$student->id} ({$student->full_name}), class {$tuitionClass->name}, date {$today}.");
 
                 } catch (\Exception $e) {
                     $this->error("   ❌ Failed to queue email to {$emailTo}: " . $e->getMessage());

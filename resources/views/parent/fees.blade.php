@@ -10,7 +10,7 @@
         $totalPaid = $fees->where('status', 'paid')->sum('amount');
     @endphp
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px;">
         <div class="card" style="background:linear-gradient(135deg,#10b981,#059669); color:#fff; border:none;">
             <div style="font-size:13px; opacity:.85; margin-bottom:4px;">Total Paid</div>
             <div style="font-size:30px; font-weight:800;">₹{{ number_format($totalPaid, 2) }}</div>
@@ -21,9 +21,9 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" style="overflow-x: auto;">
         @if($fees->count())
-            <table>
+            <table style="min-width: 500px;">
                 <thead>
                     <tr>
                         <th>Month</th>

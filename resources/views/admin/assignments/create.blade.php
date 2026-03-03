@@ -20,7 +20,8 @@
                     <option value="">Select Class</option>
                     @foreach($classes as $class)
                         <option value="{{ $class->id }}" {{ old('tuition_class_id') == $class->id ? 'selected' : '' }}>
-                            {{ $class->name }}</option>
+                            {{ $class->name }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -45,6 +46,17 @@
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Attachment (PDF/Image)</label>
                 <input type="file" name="attachment"
                     class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-sm">
+            </div>
+
+            <div class="border-t border-gray-100 pt-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Notify Students/Parents Via:</label>
+                <div class="flex flex-wrap gap-6">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" name="notify_channels[]" value="whatsapp" checked
+                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                        <span class="text-sm text-gray-600">WhatsApp</span>
+                    </label>
+                </div>
             </div>
         </div>
         <div class="mt-6 flex justify-end space-x-4">

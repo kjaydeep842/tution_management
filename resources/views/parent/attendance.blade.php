@@ -1,6 +1,7 @@
 @extends('layouts.parent')
 @section('content')
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+    <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap: wrap; gap: 16px;">
         <div>
             <h1 style="font-size:22px; font-weight:800; color:#0f172a; margin:0 0 4px;">Attendance Record</h1>
             <p style="color:#64748b; font-size:14px; margin:0;">{{ $student->full_name }}</p>
@@ -14,7 +15,7 @@
     </div>
 
     {{-- Monthly Stats --}}
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:14px; margin-bottom:24px;">
         @foreach([['Present', $present, '#10b981'], ['Absent', $absent, '#ef4444'], ['Late', $late, '#f59e0b'], ['Attendance', $pct . '%', $pct >= 75 ? '#10b981' : ($pct >= 50 ? '#f59e0b' : '#ef4444')]] as [$label, $val, $col])
             <div class="card" style="text-align:center; padding:16px;">
                 <div style="font-size:26px; font-weight:800; color:{{ $col }};">{{ $val }}</div>
@@ -29,55 +30,59 @@
             {{ $from->format('F Y') }}
         </h2>
 
-        {{-- Day headers --}}
-        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:6px;">
-            @foreach(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $d)
-                <div style="text-align:center; font-size:11px; font-weight:700; color:#94a3b8;">{{ $d }}</div>
-            @endforeach
-        </div>
-
-        {{-- Offset for first day --}}
-        @php
-            $firstDay = \Carbon\Carbon::parse($dates[0])->dayOfWeekIso; // 1=Mon
-            $emptySlots = $firstDay - 1;
-        @endphp
-
-        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;">
-            @for($i = 0; $i < $emptySlots; $i++)
-                <div></div>
-            @endfor
-
-            @foreach($dates as $date)
-                @php
-                    $rec = $attendances[$date] ?? null;
-                    $status = $rec?->status;
-                    $bg = match ($status) {
-                        'present' => '#d1fae5',
-                        'absent' => '#fee2e2',
-                        'late' => '#fef3c7',
-                        default => '#f8fafc',
-                    };
-                    $color = match ($status) {
-                        'present' => '#065f46',
-                        'absent' => '#991b1b',
-                        'late' => '#92400e',
-                        default => '#cbd5e1',
-                    };
-                    $label = match ($status) {
-                        'present' => 'P',
-                        'absent' => 'A',
-                        'late' => 'L',
-                        default => \Carbon\Carbon::parse($date)->day,
-                    };
-                @endphp
-                <div title="{{ $date }}{{ $status ? ' – ' . ucfirst($status) : '' }}" style="aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-                                    background:{{ $bg }}; border-radius:10px; cursor:default;">
-                    <span style="font-size:11px; color:#94a3b8;">{{ \Carbon\Carbon::parse($date)->day }}</span>
-                    @if($status)
-                        <span style="font-size:12px; font-weight:800; color:{{ $color }};">{{ $label }}</span>
-                    @endif
+        <div style="overflow-x: auto;">
+            <div style="min-width: 300px;">
+                {{-- Day headers --}}
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:6px;">
+                    @foreach(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $d)
+                        <div style="text-align:center; font-size:11px; font-weight:700; color:#94a3b8;">{{ $d }}</div>
+                    @endforeach
                 </div>
-            @endforeach
+
+                {{-- Offset for first day --}}
+                @php
+                    $firstDay = \Carbon\Carbon::parse($dates[0])->dayOfWeekIso; // 1=Mon
+                    $emptySlots = $firstDay - 1;
+                @endphp
+
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;">
+                    @for($i = 0; $i < $emptySlots; $i++)
+                        <div></div>
+                    @endfor
+
+                    @foreach($dates as $date)
+                        @php
+                            $rec = $attendances[$date] ?? null;
+                            $status = $rec?->status;
+                            $bg = match ($status) {
+                                'present' => '#d1fae5',
+                                'absent' => '#fee2e2',
+                                'late' => '#fef3c7',
+                                default => '#f8fafc',
+                            };
+                            $color = match ($status) {
+                                'present' => '#065f46',
+                                'absent' => '#991b1b',
+                                'late' => '#92400e',
+                                default => '#cbd5e1',
+                            };
+                            $label = match ($status) {
+                                'present' => 'P',
+                                'absent' => 'A',
+                                'late' => 'L',
+                                default => \Carbon\Carbon::parse($date)->day,
+                            };
+                        @endphp
+                        <div title="{{ $date }}{{ $status ? ' – ' . ucfirst($status) : '' }}" style="aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+                                                    background:{{ $bg }}; border-radius:10px; cursor:default;">
+                            <span style="font-size:10px; color:#94a3b8;">{{ \Carbon\Carbon::parse($date)->day }}</span>
+                            @if($status)
+                                <span style="font-size:12px; font-weight:800; color:{{ $color }};">{{ $label }}</span>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
 
         {{-- Legend --}}

@@ -372,6 +372,14 @@
                 </svg>
                 Performance Reports
             </a>
+            <a href="{{ route('admin.guidance.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.guidance.*') ? 'active' : '' }}">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                Guidance Requests
+            </a>
         </nav>
 
         <!-- Logout -->
@@ -398,9 +406,11 @@
                 <!-- Mobile & Desktop Left Section -->
                 <div class="flex items-center gap-4">
                     <!-- Mobile Hamburger -->
-                    <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+                    <button @click="sidebarOpen = true"
+                        class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
 
@@ -408,9 +418,12 @@
                     <div class="hidden xs:flex items-center text-sm text-gray-500 truncate max-w-[150px] sm:max-w-none">
                         <span class="truncate">{{ \App\Models\Setting::get('site_name', 'BrightMind') }}</span>
                         <svg class="flex-shrink-0 mx-2 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
                         </svg>
-                        <span class="font-semibold text-gray-900 truncate">{{ ucfirst(request()->segment(1) ?? 'Dashboard') }}</span>
+                        <span
+                            class="font-semibold text-gray-900 truncate">{{ ucfirst(request()->segment(1) ?? 'Dashboard') }}</span>
                     </div>
                 </div>
 
@@ -421,7 +434,8 @@
                         <span class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</span>
                     </div>
                     <div class="relative group">
-                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-100 ring-2 ring-white">
+                        <div
+                            class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-100 ring-2 ring-white">
                             {{ substr(auth()->user()->name, 0, 1) }}
                         </div>
                     </div>
@@ -432,10 +446,13 @@
         <!-- Main Body -->
         <main class="flex-1 p-4 sm:p-6 lg:p-8 bg-slate-50/50">
             @if(session('success'))
-                <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl flex items-start gap-3 text-sm sm:text-base animate-in fade-in slide-in-from-top-4 duration-300">
+                <div
+                    class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl flex items-start gap-3 text-sm sm:text-base animate-in fade-in slide-in-from-top-4 duration-300">
                     <div class="flex-shrink-0 bg-green-100 p-1 rounded-full">
                         <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
                         </svg>
                     </div>
                     <div>
@@ -444,9 +461,10 @@
                     </div>
                 </div>
             @endif
-            
+
             @if(session('error'))
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+                <div
+                    class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
                     <span class="flex-shrink-0 text-xl">⚠️</span>
                     <div>
                         <p class="font-semibold">Error Occurred</p>

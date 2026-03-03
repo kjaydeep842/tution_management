@@ -88,9 +88,29 @@ Route::middleware(['auth', 'verified', 'parent.portal'])->prefix('parent')->name
     Route::get('/fees', [\App\Http\Controllers\ParentController::class, 'fees'])->name('fees');
     Route::get('/performance', [\App\Http\Controllers\ParentController::class, 'performance'])->name('performance');
     Route::get('/performance/{report}/download', [App\Http\Controllers\PerformanceReportController::class, 'download'])->name('performance.download');
-    Route::get('/exams', [\App\Http\Controllers\ParentController::class, 'exams'])->name('exams');
+    // Exam Marks
+    Route::get('/exam-marks', [\App\Http\Controllers\ParentController::class, 'examMarks'])->name('exams');
+
+    // Past Records
+    Route::get('/past-records', [\App\Http\Controllers\ParentController::class, 'pastRecords'])->name('past-records');
+
+    // Weak Subject Guidance
+    Route::prefix('guidance')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Parent\GuidanceController::class, 'index'])->name('guidance.index');
+        Route::get('/create', [\App\Http\Controllers\Parent\GuidanceController::class, 'create'])->name('guidance.create');
+        Route::post('/', [\App\Http\Controllers\Parent\GuidanceController::class, 'store'])->name('guidance.store');
+    });
     Route::get('/profile', [\App\Http\Controllers\ParentController::class, 'profile'])->name('profile');
     Route::post('/profile', [\App\Http\Controllers\ParentController::class, 'updateProfile'])->name('profile.update');
+});
+
+// Admin Guidance Routes (Assuming admin routes are prefixed or grouped)
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::prefix('guidance')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\GuidanceController::class, 'index'])->name('admin.guidance.index');
+        Route::get('/{guidance}', [\App\Http\Controllers\Admin\GuidanceController::class, 'show'])->name('admin.guidance.show');
+        Route::patch('/{guidance}', [\App\Http\Controllers\Admin\GuidanceController::class, 'respond'])->name('admin.guidance.respond');
+    });
 });
 
 

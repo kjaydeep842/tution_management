@@ -35,9 +35,19 @@ class AssignmentController extends Controller
             $validated['file_path'] = $request->file('file')->store('assignments', 'public');
         }
 
-        Assignment::create($validated);
+        $assignment = Assignment::create($validated);
 
-        return redirect()->route('assignments.index')->with('success', 'Assignment created.');
+        // Send notifications if requested
+        if ($request->has('notify_channels')) {
+            try {
+                $notificationService = new \App\Services\NotificationService();
+                $notificationService->sendAssignmentNotification($assignment, $request->get('notify_channels'));
+            } catch (\Exception $e) {
+                \Log::error("Assignment notification failed: " . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('assignments.index')->with('success', 'Assignment created and notifications sent.');
     }
 
     public function show(Assignment $assignment)

@@ -44,6 +44,12 @@ class ParentController extends Controller
         $feesDue = $student->fees->where('status', '!=', 'paid')->sum('amount');
         $feesPaid = $student->fees->where('status', 'paid')->sum('amount');
 
+        // Progress Reports (Recent Performance)
+        $performanceReports = \App\Models\PerformanceReport::where('student_id', $student->id)
+            ->orderBy('report_date', 'desc')
+            ->take(3)
+            ->get();
+
         return view('parent.dashboard', compact(
             'student',
             'total',
@@ -53,8 +59,25 @@ class ParentController extends Controller
             'pct',
             'recentAbsent',
             'feesDue',
-            'feesPaid'
+            'feesPaid',
+            'performanceReports'
         ));
+    }
+
+    public function pastRecords()
+    {
+        $student = $this->getStudent();
+        // For now, showing past performance reports and exam marks as "records"
+        $pastReports = \App\Models\PerformanceReport::where('student_id', $student->id)
+            ->orderBy('report_date', 'desc')
+            ->get();
+
+        $pastExams = \App\Models\ExamMark::with('exam')
+            ->where('student_id', $student->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('parent.past_records', compact('student', 'pastReports', 'pastExams'));
     }
 
     public function attendance(Request $request)

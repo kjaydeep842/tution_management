@@ -6,7 +6,7 @@
         <p style="color: #64748b; font-size: 14px; margin: 0;">Manage your account information and password.</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
         {{-- Profile Info Card --}}
         <div class="card">
             <h2
@@ -51,7 +51,8 @@
                                     onfocus="this.style.borderColor='#6366f1'; this.style.boxShadow='0 0 0 3px rgba(99, 102, 241, 0.1)'"
                                     onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
                                 @error('password') <p style="color: #e11d48; font-size: 12px; margin-top: 6px;">
-                                {{ $message }}</p> @enderror
+                                    {{ $message }}
+                                </p> @enderror
                             </div>
 
                             <div>

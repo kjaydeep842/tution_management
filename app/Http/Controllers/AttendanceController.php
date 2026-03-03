@@ -8,6 +8,7 @@ use App\Models\TuitionClass;
 use App\Mail\AttendanceAbsentMail;
 use App\Mail\AttendancePresentMail;
 use App\Mail\AttendanceLateMail;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -74,7 +75,7 @@ class AttendanceController extends Controller
 
         // Send email notifications for students newly marked (or status changed)
         $className = TuitionClass::find($request->tuition_class_id)?->name ?? 'your class';
-        
+
         // Eager load all students in the request
         $students = Student::whereIn('id', array_keys($request->attendance))->get()->keyBy('id');
 
@@ -88,26 +89,14 @@ class AttendanceController extends Controller
 
             // Only send if not already notified for this status
             if ($student && $attendance && !$attendance->notified_at) {
-                $emailTo = $student->guardian_email ?: $student->email;
-                if ($emailTo) {
-                    try {
-                        $mailable = match($status) {
-                            'absent'  => new AttendanceAbsentMail($student, $request->date, $className),
-                            'present' => new AttendancePresentMail($student, $request->date, $className),
-                            'late'    => new AttendanceLateMail($student, $request->date, $className),
-                            default   => null
-                        };
+                try {
+                    $notificationService = new NotificationService();
+                    $notificationService->sendAttendanceNotification($attendance, ['email', 'whatsapp']);
 
-                        if ($mailable) {
-                            // Use send() for immediate delivery at the time of attendance
-                            Mail::to($emailTo)->send($mailable);
-                            
-                            // Mark as notified
-                            $attendance->update(['notified_at' => now()]);
-                        }
-                    } catch (\Exception $e) {
-                        \Log::warning("Attendance email failed for student {$student_id}: " . $e->getMessage());
-                    }
+                    // Mark as notified (already handled in sendAttendanceNotification would be better, but keeping consistency)
+                    $attendance->update(['notified_at' => now()]);
+                } catch (\Exception $e) {
+                    \Log::warning("Attendance notification failed for student {$student_id}: " . $e->getMessage());
                 }
             }
         }
