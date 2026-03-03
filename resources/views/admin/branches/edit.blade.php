@@ -1,39 +1,39 @@
 <x-admin-layout>
-    <div style="max-width:640px;">
-        <div style="margin-bottom:28px;">
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Edit Branch — {{ $branch->name }}</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Update branch details</p>
+    <div class="max-w-xl w-full">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Edit Branch — {{ $branch->name }}</h1>
+            <p class="text-gray-500">Update branch details</p>
         </div>
 
         <form action="{{ route('branches.update', $branch) }}" method="POST">
             @csrf @method('PUT')
-            <div class="card" style="margin-bottom:20px;">
-                <div style="display:flex; flex-direction:column; gap:20px;">
+            <div class="card mb-6">
+                <div class="flex flex-col gap-5">
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Branch Name *</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Branch Name *</label>
                         <input type="text" name="name" class="input-field" required value="{{ old('name', $branch->name) }}">
-                        @error('name') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
+                        @error('name') <p class="text-rose-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Address</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Address</label>
                         <input type="text" name="address" class="input-field" value="{{ old('address', $branch->address) }}">
                     </div>
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Phone Number</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
                         <input type="text" name="phone" class="input-field" value="{{ old('phone', $branch->phone) }}">
                     </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
+                    <div class="flex items-center gap-3">
                         <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" value="1" id="is_active" {{ $branch->is_active ? 'checked' : '' }}
-                            style="width:18px; height:18px; accent-color:#6366f1;">
-                        <label for="is_active" style="font-size:14px; font-weight:600; color:#374151; cursor:pointer;">Branch is Active</label>
+                            class="w-5 h-5 accent-indigo-600 cursor-pointer">
+                        <label for="is_active" class="text-sm font-semibold text-gray-700 cursor-pointer">Branch is Active</label>
                     </div>
                 </div>
             </div>
 
-            <div style="display:flex; gap:12px;">
-                <button type="submit" class="btn-primary">Save Changes</button>
-                <a href="{{ route('branches.index') }}" class="btn-secondary">Cancel</a>
+            <div class="flex flex-col sm:flex-row gap-4 justify-end">
+                <a href="{{ route('branches.index') }}" class="btn-secondary w-full sm:w-auto text-center order-2 sm:order-1">Cancel</a>
+                <button type="submit" class="btn-primary w-full sm:w-auto order-1 sm:order-2">Save Changes</button>
             </div>
         </form>
     </div>

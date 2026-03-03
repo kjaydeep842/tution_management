@@ -1,82 +1,83 @@
 <x-admin-layout>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Teachers</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Manage all teaching staff</p>
+            <h1 class="text-2xl font-bold text-gray-900">Teachers</h1>
+            <p class="text-gray-500">Manage all teaching staff</p>
         </div>
-        <a href="{{ route('teachers.create') }}" class="btn-primary">+ Add Teacher</a>
+        <a href="{{ route('teachers.create') }}" class="btn-primary w-full sm:w-auto justify-center">+ Add Teacher</a>
     </div>
 
-    <div class="card" style="padding:0; overflow:hidden;">
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Specialisation</th>
-                    <th>Branch</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($teachers as $teacher)
+    <div class="card p-0 overflow-hidden shadow-sm border-gray-100">
+        <div class="overflow-x-auto">
+            <table class="min-w-[1000px]">
+                <thead>
                     <tr>
-                        <td style="color:#94a3b8; font-size:13px;">{{ $teachers->firstItem() + $loop->index }}</td>
-                        <td>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <div
-                                    style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; font-weight:700; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                    {{ substr($teacher->name, 0, 1) }}</div>
-                                <span style="font-weight:600; color:#0f172a;">{{ $teacher->name }}</span>
-                            </div>
-                        </td>
-                        <td style="color:#64748b; font-size:13px;">{{ $teacher->phone ?? '—' }}</td>
-                        <td style="color:#64748b; font-size:13px;">{{ $teacher->email ?? '—' }}</td>
-                        <td>
-                            @if($teacher->subject_specialisation)
-                                <span class="badge badge-blue">{{ $teacher->subject_specialisation }}</span>
-                            @else
-                                <span style="color:#94a3b8; font-size:13px;">—</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if($teacher->branch)
-                                <span class="badge badge-purple">{{ $teacher->branch->name }}</span>
-                            @else
-                                <span style="color:#94a3b8; font-size:13px;">—</span>
-                            @endif
-                        </td>
-                        <td>
-                            <span class="badge {{ $teacher->is_active ? 'badge-green' : 'badge-red' }}">
-                                {{ $teacher->is_active ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-                        <td>
-                            <div style="display:flex; gap:8px; align-items:center;">
-                                <a href="{{ route('teachers.edit', $teacher) }}" class="btn-secondary"
-                                    style="padding:6px 14px; font-size:13px;">Edit</a>
-                                <form action="{{ route('teachers.destroy', $teacher) }}" method="POST"
-                                    onsubmit="return confirm('Remove this teacher?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit"
-                                        style="padding:6px 14px; font-size:13px; background:#fff1f2; color:#e11d48; border:1.5px solid #fecdd3; border-radius:10px; cursor:pointer; font-weight:600;">Delete</button>
-                                </form>
-                            </div>
-                        </td>
+                        <th class="w-16">#</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Specialisation</th>
+                        <th>Branch</th>
+                        <th>Status</th>
+                        <th class="text-right">Actions</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="8" style="text-align:center; padding:48px; color:#94a3b8;">
-                            No teachers added yet. <a href="{{ route('teachers.create') }}" style="color:#6366f1;">Add one
-                                →</a>
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($teachers as $teacher)
+                        <tr class="hover:bg-gray-50/50 transition-colors">
+                            <td class="text-gray-400 font-mono text-xs">{{ $teachers->firstItem() + $loop->index }}</td>
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-sm flex items-center justify-center flex-shrink-0 shadow-sm">
+                                        {{ substr($teacher->name, 0, 1) }}
+                                    </div>
+                                    <span class="font-semibold text-gray-900">{{ $teacher->name }}</span>
+                                </div>
+                            </td>
+                            <td class="text-gray-600 text-sm">{{ $teacher->phone ?? '—' }}</td>
+                            <td class="text-gray-600 text-sm">{{ $teacher->email ?? '—' }}</td>
+                            <td>
+                                @if($teacher->subject_specialisation)
+                                    <span class="badge badge-blue">{{ $teacher->subject_specialisation }}</span>
+                                @else
+                                    <span class="text-gray-300">—</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($teacher->branch)
+                                    <span class="badge badge-purple">{{ $teacher->branch->name }}</span>
+                                @else
+                                    <span class="text-gray-300">—</span>
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge {{ $teacher->is_active ? 'badge-green' : 'badge-red' }}">
+                                    {{ $teacher->is_active ? 'Active' : 'Inactive' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('teachers.edit', $teacher) }}" class="btn-secondary px-3 py-1.5 text-xs">Edit</a>
+                                    <form action="{{ route('teachers.destroy', $teacher) }}" method="POST" onsubmit="return confirm('Remove this teacher?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="px-3 py-1.5 text-xs bg-red-50 text-red-600 border border-red-100 rounded-lg hover:bg-red-100 transition-colors font-semibold">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center py-12">
+                                <div class="flex flex-col items-center gap-2">
+                                    <p class="text-gray-400 italic">No teachers added yet.</p>
+                                    <a href="{{ route('teachers.create') }}" class="text-indigo-600 font-medium hover:underline">Add one →</a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
         @if($teachers->hasPages())
             <div style="padding:16px 20px; border-top:1px solid #f1f5f9;">{{ $teachers->links() }}</div>
         @endif

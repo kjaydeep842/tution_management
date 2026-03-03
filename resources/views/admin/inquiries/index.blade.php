@@ -1,5 +1,5 @@
 <x-admin-layout>
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Student Inquiries</h1>
             <p class="text-gray-500">Manage and track potential student leads.</p>
@@ -7,19 +7,20 @@
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <table class="w-full text-left">
-            <thead class="bg-gray-50 border-b border-gray-100">
-                <tr>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Contact</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Class Interest
-                    </th>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">
-                        Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[900px]">
+                <thead class="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Contact</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Class Interest
+                        </th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">
+                            Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
                 @forelse($inquiries as $inquiry)
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-6 py-4">
@@ -40,26 +41,28 @@
                                 {{ ucfirst($inquiry->status) }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-right space-x-2">
-                            <form action="{{ route('inquiries.update-status', $inquiry) }}" method="POST" class="inline">
-                                @csrf
-                                @method('PATCH')
-                                <select name="status" onchange="this.form.submit()"
-                                    class="text-xs bg-gray-50 border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-indigo-500">
-                                    <option value="pending" {{ $inquiry->status == 'pending' ? 'selected' : '' }}>Pending
-                                    </option>
-                                    <option value="converted" {{ $inquiry->status == 'converted' ? 'selected' : '' }}>
-                                        Converted</option>
-                                    <option value="closed" {{ $inquiry->status == 'closed' ? 'selected' : '' }}>Closed
-                                    </option>
-                                </select>
-                            </form>
-                            @if($inquiry->status != 'converted')
-                                <a href="{{ route('students.create', ['inquiry_id' => $inquiry->id]) }}"
-                                    class="inline-flex items-center px-3 py-1 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition-colors">
-                                    Enroll
-                                </a>
-                            @endif
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2">
+                                <form action="{{ route('inquiries.update-status', $inquiry) }}" method="POST" class="m-0">
+                                    @csrf
+                                    @method('PATCH')
+                                    <select name="status" onchange="this.form.submit()"
+                                        class="text-xs bg-gray-50 border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-indigo-500">
+                                        <option value="pending" {{ $inquiry->status == 'pending' ? 'selected' : '' }}>Pending
+                                        </option>
+                                        <option value="converted" {{ $inquiry->status == 'converted' ? 'selected' : '' }}>
+                                            Converted</option>
+                                        <option value="closed" {{ $inquiry->status == 'closed' ? 'selected' : '' }}>Closed
+                                        </option>
+                                    </select>
+                                </form>
+                                @if($inquiry->status != 'converted')
+                                    <a href="{{ route('students.create', ['inquiry_id' => $inquiry->id]) }}"
+                                        class="inline-flex items-center px-3 py-1 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition-colors whitespace-nowrap">
+                                        Enroll
+                                    </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -69,8 +72,9 @@
                 @endforelse
             </tbody>
         </table>
-        <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
-            {{ $inquiries->links() }}
-        </div>
     </div>
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+        {{ $inquiries->links() }}
+    </div>
+</div>
 </x-admin-layout>

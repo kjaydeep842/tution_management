@@ -1,15 +1,16 @@
 <x-admin-layout>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Batches / Classes</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">All tuition batches across branches</p>
+            <h1 class="text-2xl font-bold text-gray-900">Batches / Classes</h1>
+            <p class="text-gray-500">All tuition batches across branches</p>
         </div>
-        <a href="{{ route('tuition-classes.create') }}" class="btn-primary">+ Create Batch</a>
+        <a href="{{ route('tuition-classes.create') }}" class="btn-primary inline-flex justify-center">+ Create Batch</a>
     </div>
 
-    <div class="card" style="padding:0; overflow:hidden;">
-        <table>
-            <thead>
+    <div class="card p-0 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[1000px]">
+                <thead>
                 <tr>
                     <th>#</th>
                     <th>Batch Name</th>
@@ -56,13 +57,13 @@
                         </td>
                         <td style="color:#64748b; font-size:13px; max-width:180px;">{{ $class->schedule_info ?? '—' }}</td>
                         <td>
-                            <div style="display:flex; gap:8px; align-items:center;">
-                                <a href="{{ route('tuition-classes.edit', $class) }}" class="btn-secondary"
+                            <div class="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+                                <a href="{{ route('tuition-classes.edit', $class) }}" class="btn-secondary whitespace-nowrap"
                                     style="padding:6px 14px; font-size:13px;">Edit</a>
                                 <form action="{{ route('tuition-classes.destroy', $class) }}" method="POST"
-                                    onsubmit="return confirm('Delete this batch?')">
+                                    onsubmit="return confirm('Delete this batch?')" class="m-0">
                                     @csrf @method('DELETE')
-                                    <button type="submit"
+                                    <button type="submit" class="whitespace-nowrap"
                                         style="padding:6px 14px; font-size:13px; background:#fff1f2; color:#e11d48; border:1.5px solid #fecdd3; border-radius:10px; cursor:pointer; font-weight:600;">Delete</button>
                                 </form>
                             </div>
@@ -78,8 +79,9 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
         @if($classes->hasPages())
-            <div style="padding:16px 20px; border-top:1px solid #f1f5f9;">{{ $classes->links() }}</div>
+            <div class="px-5 py-4 border-t border-gray-100">{{ $classes->links() }}</div>
         @endif
     </div>
 </x-admin-layout>

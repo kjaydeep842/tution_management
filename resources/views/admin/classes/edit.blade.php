@@ -141,12 +141,12 @@
         }
     </style>
 
-    <div style="max-width:720px;">
-        <div style="margin-bottom:28px;">
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Edit Batch —
+    <div class="max-w-3xl w-full">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Edit Batch —
                 {{ $tuitionClass->name }}
             </h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Update batch details</p>
+            <p class="text-gray-500">Update batch details</p>
         </div>
 
         @php
@@ -156,21 +156,19 @@
 
         <form action="{{ route('tuition-classes.update', $tuitionClass) }}" method="POST" id="batchForm">
             @csrf @method('PUT')
-            <div class="card" style="margin-bottom:20px;">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="card mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <div style="grid-column:1/3;">
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Batch
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Batch
                             / Class Name *</label>
                         <input type="text" name="name" class="input-field" required
                             value="{{ old('name', $tuitionClass->name) }}">
                     </div>
 
-                    <div style="grid-column:1/3;">
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Subjects
-                            * <span style="font-weight:400; color:#94a3b8;">(select one or more)</span></label>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Subjects
+                            * <span class="font-normal text-gray-400">(select one or more)</span></label>
                         <div class="ms-wrapper" id="subject-ms">
                             <div class="ms-trigger" onclick="toggleMS('subject-ms')">
                                 <span class="ms-placeholder">Select subjects…</span>
@@ -190,9 +188,8 @@
                     </div>
 
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Branch
-                            <span style="font-weight:400; color:#94a3b8;">(select one or more)</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Branch
+                            <span class="font-normal text-gray-400">(select one or more)</span></label>
                         <div class="ms-wrapper" id="branch-ms">
                             <div class="ms-trigger" onclick="toggleMS('branch-ms')">
                                 <span class="ms-placeholder">Select branches…</span>
@@ -211,8 +208,7 @@
                     </div>
 
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Assign
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Assign
                             Teacher</label>
                         <select name="teacher_id" class="input-field">
                             <option value="">— Not Assigned —</option>
@@ -225,8 +221,7 @@
                     </div>
 
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Schedule
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Schedule
                             / Timing</label>
                         <input type="text" name="schedule_info" class="input-field"
                             value="{{ old('schedule_info', $tuitionClass->schedule_info) }}"
@@ -235,10 +230,9 @@
 
                     {{-- Class Start Time (for absence cron job) --}}
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Class Start Time
-                            <span style="font-weight:400; color:#94a3b8;">(absent email sent 30 min after)</span>
+                            <span class="font-normal text-gray-400">(absent email sent 30 min after)</span>
                         </label>
                         <input type="time" name="class_time" class="input-field"
                             value="{{ old('class_time', $tuitionClass->class_time ? \Carbon\Carbon::parse($tuitionClass->class_time)->format('H:i') : '') }}"
@@ -249,9 +243,9 @@
                 </div>
             </div>
 
-            <div style="display:flex; gap:12px;">
-                <button type="submit" class="btn-primary">Save Changes</button>
-                <a href="{{ route('tuition-classes.index') }}" class="btn-secondary">Cancel</a>
+            <div class="flex flex-col sm:flex-row gap-4 justify-end">
+                <a href="{{ route('tuition-classes.index') }}" class="btn-secondary w-full sm:w-auto text-center order-2 sm:order-1">Cancel</a>
+                <button type="submit" class="btn-primary w-full sm:w-auto order-1 sm:order-2">Save Changes</button>
             </div>
         </form>
     </div>

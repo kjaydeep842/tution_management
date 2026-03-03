@@ -391,56 +391,74 @@
     </aside>
 
     <!-- Main Content Wrapper -->
-    <div class="lg:pl-64 min-h-screen flex flex-col">
+    <div class="lg:pl-64 min-h-screen flex flex-col transition-all duration-300">
         <!-- Topbar -->
-        <header style="background:white; border-bottom:1px solid #f1f5f9; position:sticky; top:0; z-index:30;">
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:0 28px; height:64px;">
-                <!-- Mobile Hamburger -->
-                <button @click="sidebarOpen = true" class="lg:hidden"
-                    style="background:none; border:none; cursor:pointer; color:#64748b;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-                <!-- Page Breadcrumb -->
-                <div style="font-size:14px; color:#64748b;">{{ \App\Models\Setting::get('site_name', 'BrightMind') }}
-                    <span style="color:#d1d5db;">›</span> <span
-                        style="color:#374151; font-weight:600;">{{ ucfirst(request()->segment(1) ?? 'Dashboard') }}</span>
+        <header class="bg-white border-b border-f1f5f9 sticky top-0 z-30 transition-all duration-300">
+            <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+                <!-- Mobile & Desktop Left Section -->
+                <div class="flex items-center gap-4">
+                    <!-- Mobile Hamburger -->
+                    <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+
+                    <!-- Page Breadcrumb (Hidden on extra small screens) -->
+                    <div class="hidden xs:flex items-center text-sm text-gray-500 truncate max-w-[150px] sm:max-w-none">
+                        <span class="truncate">{{ \App\Models\Setting::get('site_name', 'BrightMind') }}</span>
+                        <svg class="flex-shrink-0 mx-2 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="font-semibold text-gray-900 truncate">{{ ucfirst(request()->segment(1) ?? 'Dashboard') }}</span>
+                    </div>
                 </div>
-                <!-- User info -->
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <span style="font-size:13px; color:#64748b;">Welcome, <strong
-                            style="color:#0f172a;">{{ auth()->user()->name }}</strong></span>
-                    <div
-                        style="width:36px; height:36px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:14px;">
-                        {{ substr(auth()->user()->name, 0, 1) }}
+
+                <!-- Right Section: User Info -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <div class="hidden sm:flex flex-col items-end">
+                        <span class="text-xs text-gray-400 uppercase tracking-wider font-bold">Admin</span>
+                        <span class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</span>
+                    </div>
+                    <div class="relative group">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-100 ring-2 ring-white">
+                            {{ substr(auth()->user()->name, 0, 1) }}
+                        </div>
                     </div>
                 </div>
             </div>
         </header>
 
         <!-- Main Body -->
-        <main style="flex:1; padding:32px 28px; background:#f8fafc;">
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 bg-slate-50/50">
             @if(session('success'))
-                <div
-                    style="margin-bottom:20px; padding:14px 18px; background:#f0fdf4; border:1.5px solid #86efac; color:#166534; border-radius:14px; display:flex; align-items:center; gap:10px; font-size:14px;">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    {{ session('success') }}
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl flex items-start gap-3 text-sm sm:text-base animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div class="flex-shrink-0 bg-green-100 p-1 rounded-full">
+                        <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold">Success!</p>
+                        <p class="text-green-600/90">{{ session('success') }}</p>
+                    </div>
                 </div>
             @endif
+            
             @if(session('error'))
-                <div
-                    style="margin-bottom:20px; padding:14px 18px; background:#fef2f2; border:1.5px solid #fca5a5; color:#991b1b; border-radius:14px; display:flex; align-items:center; gap:10px; font-size:14px;">
-                    ⚠️ {{ session('error') }}
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <span class="flex-shrink-0 text-xl">⚠️</span>
+                    <div>
+                        <p class="font-semibold">Error Occurred</p>
+                        <p class="text-red-600/90">{{ session('error') }}</p>
+                    </div>
                 </div>
             @endif
 
-            {{ $slot ?? '' }}
-            @yield('content')
+            <div class="max-w-7xl mx-auto">
+                {{ $slot ?? '' }}
+                @yield('content')
+            </div>
         </main>
     </div>
 </body>

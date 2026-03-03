@@ -1,0 +1,10 @@
+[01-Mar-2026 18:11:54 UTC] PHP Warning:  require(/home/commcdmy/tution_management/vendor/autoload.php): Failed to open stream: No such file or directory in /home/commcdmy/tution_management/artisan on line 9
+[01-Mar-2026 18:11:54 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/commcdmy/tution_management/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/commcdmy/tution_management/artisan:9
+Stack trace:
+#0 {main}
+  thrown in /home/commcdmy/tution_management/artisan on line 9
+[01-Mar-2026 18:12:00 UTC] PHP Warning:  require(/home/commcdmy/tution_management/vendor/autoload.php): Failed to open stream: No such file or directory in /home/commcdmy/tution_management/artisan on line 9
+[01-Mar-2026 18:12:00 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/commcdmy/tution_management/vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/commcdmy/tution_management/artisan:9
+Stack trace:
+#0 {main}
+  thrown in /home/commcdmy/tution_management/artisan on line 9

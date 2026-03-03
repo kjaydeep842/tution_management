@@ -1,50 +1,40 @@
 <x-admin-layout>
-    <div style="margin-bottom:28px; display:flex; justify-content:space-between; align-items:center;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Parent Details</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Detailed information about the parent account and linked
-                students.</p>
+            <h1 class="text-2xl font-bold text-gray-900">Parent Details</h1>
+            <p class="text-gray-500">Detailed information about the parent account and linked students.</p>
         </div>
-        <div style="display:flex; gap:12px;">
-            <a href="{{ route('admin.parents.edit', $parent) }}" class="btn-primary">Edit Parent</a>
-            <a href="{{ route('admin.parents.index') }}" class="btn-secondary">← Back</a>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="{{ route('admin.parents.edit', $parent) }}" class="btn-primary inline-flex justify-center">Edit Parent</a>
+            <a href="{{ route('admin.parents.index') }}" class="btn-secondary inline-flex justify-center">← Back</a>
         </div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:24px;">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr,1.5fr] gap-6">
         {{-- Parent Account Card --}}
-        <div class="card">
-            <div
-                style="display:flex; align-items:center; gap:16px; margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid #f1f5f9;">
-                <div
-                    style="width:64px; height:64px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:24px; font-weight:800;">
+        <div class="card h-fit">
+            <div class="flex items-center gap-4 mb-6 pb-5 border-b border-gray-100">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-extrabold flex-shrink-0">
                     {{ substr($parent->name, 0, 1) }}
                 </div>
                 <div>
-                    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0;">{{ $parent->name }}</h2>
-                    <span class="badge badge-purple" style="margin-top:4px;">Parent Account</span>
+                    <h2 class="text-xl font-extrabold text-gray-900 leading-tight">{{ $parent->name }}</h2>
+                    <span class="badge badge-purple mt-1">Parent Account</span>
                 </div>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="flex flex-col gap-4">
                 <div>
-                    <p
-                        style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
-                        Email Address</p>
-                    <p style="font-size:15px; color:#374151; font-weight:500;">{{ $parent->email }}</p>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
+                    <p class="text-[15px] text-gray-700 font-medium break-all">{{ $parent->email }}</p>
                 </div>
                 <div>
-                    <p
-                        style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
-                        Phone Number</p>
-                    <p style="font-size:15px; color:#374151; font-weight:500;">{{ $parent->phone ?? 'Not provided' }}
-                    </p>
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</p>
+                    <p class="text-[15px] text-gray-700 font-medium">{{ $parent->phone ?? 'Not provided' }}</p>
                 </div>
                 <div>
-                    <p
-                        style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
-                        Account Created</p>
-                    <p style="font-size:15px; color:#374151; font-weight:500;">
+                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Account Created</p>
+                    <p class="text-[15px] text-gray-700 font-medium">
                         {{ $parent->created_at->format('d M, Y') }}</p>
                 </div>
             </div>
@@ -52,12 +42,12 @@
 
         {{-- Associated Students Card --}}
         <div class="card">
-            <h3 style="font-size:16px; font-weight:700; color:#374151; margin:0 0 20px;">Associated Students
+            <h3 class="text-base font-bold text-gray-700 mb-5">Associated Students
                 ({{ $parent->students->count() }})</h3>
 
             @if($parent->students->count() > 0)
-                <div class="overflow-hidden border border-gray-100 rounded-xl">
-                    <table class="w-full">
+                <div class="overflow-x-auto border border-gray-100 rounded-xl">
+                    <table class="w-full min-w-[500px]">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Student</th>
@@ -90,14 +80,12 @@
                     </table>
                 </div>
             @else
-                <div
-                    style="padding:40px 20px; text-align:center; background:#f8fafc; border-radius:14px; border:1px dashed #cbd5e1;">
-                    <svg width="32" height="32" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"
-                        style="margin:0 auto 12px;">
+                <div class="py-10 px-5 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                    <svg class="w-8 h-8 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    <p style="color:#64748b; font-size:14px;">No students are currently linked to this parent account.</p>
+                    <p class="text-gray-500 text-sm">No students are currently linked to this parent account.</p>
                     <a href="{{ route('admin.parents.edit', $parent) }}"
                         class="inline-block mt-4 text-indigo-600 font-semibold hover:underline">Link Students Now</a>
                 </div>

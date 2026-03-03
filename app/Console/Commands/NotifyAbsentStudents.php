@@ -51,37 +51,35 @@ class NotifyAbsentStudents extends Command
         $emailsSent = 0;
 
         foreach ($classes as $tuitionClass) {
-            // Parse the stored class_time and add 30 minutes
-            $notifyAt = Carbon::createFromTimeString($tuitionClass->class_time)->addMinutes(30);
+            // Parse the stored class_time
+            $classStartTime = Carbon::createFromTimeString($tuitionClass->class_time);
+            $notifyAfter = $classStartTime->copy()->addMinutes(30);
 
-            // Only act if we are within the same minute window
-            // (scheduler runs every minute; we check HH:MM match)
-            if ($now->format('H:i') !== $notifyAt->format('H:i')) {
+            // We only process this class if the current time is AFTER (class_time + 30 min)
+            if ($now->lt($notifyAfter)) {
+                $this->line("   ⏳ Class [{$tuitionClass->name}] — too early. Scheduled for {$notifyAfter->format('H:i')}.");
                 continue;
             }
 
-            $this->line("⏰  Class [{$tuitionClass->name}] — notify window matched ({$notifyAt->format('H:i')}).");
+            $this->line("⏰  Class [{$tuitionClass->name}] — processing pending absent notifications.");
 
-            // Find all attendance records marked 'absent' for this class today
+            // Find all attendance records marked 'absent' for this class today that haven't been notified
             $absentRecords = Attendance::with('student')
                 ->where('tuition_class_id', $tuitionClass->id)
                 ->where('date', $today)
                 ->where('status', 'absent')
+                ->whereNull('notified_at')
                 ->get();
 
             if ($absentRecords->isEmpty()) {
-                $this->line("   ✅ No absent students found for [{$tuitionClass->name}] today.");
+                $this->line("   ✅ All absent students for [{$tuitionClass->name}] have already been notified.");
                 continue;
             }
 
             foreach ($absentRecords as $record) {
                 $student = $record->student;
+                if (!$student) continue;
 
-                if (!$student) {
-                    continue;
-                }
-
-                // Use guardian_email first, fall back to student's own email
                 $emailTo = $student->guardian_email ?: $student->email;
 
                 if (!$emailTo) {
@@ -90,24 +88,28 @@ class NotifyAbsentStudents extends Command
                 }
 
                 try {
+                    // Use send() instead of queue() since a queue worker might not be running
                     Mail::to($emailTo)->send(new AttendanceAbsentMail(
                         $student,
                         $today,
                         $tuitionClass->name
                     ));
 
+                    // Mark as notified so we don't send again
+                    $record->update(['notified_at' => now()]);
+
                     $emailsSent++;
                     $this->line("   📧 Email sent → Roll #{$student->roll_no} – {$student->full_name} → {$emailTo}");
-                    Log::info("AbsentNotify: Sent to {$emailTo} for student {$student->id} ({$student->full_name}), class {$tuitionClass->name}, date {$today}.");
+                    Log::info("AbsentNotify (Scheduled): Sent to {$emailTo} for student {$student->id} ({$student->full_name}), class {$tuitionClass->name}, date {$today}.");
 
                 } catch (\Exception $e) {
-                    $this->error("   ❌ Failed to send email to {$emailTo}: " . $e->getMessage());
-                    Log::error("AbsentNotify: Failed for student {$student->id} – " . $e->getMessage());
+                    $this->error("   ❌ Failed to queue email to {$emailTo}: " . $e->getMessage());
+                    Log::error("AbsentNotify (Command): Failed for student {$student->id} – " . $e->getMessage());
                 }
             }
         }
 
-        $this->info("Done. Total emails sent: {$emailsSent}");
+        $this->info("Done. Total emails queued: {$emailsSent}");
         return self::SUCCESS;
     }
 }

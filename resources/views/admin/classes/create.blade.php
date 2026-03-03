@@ -92,27 +92,27 @@
         .ms-empty { padding: 16px; text-align: center; color: #94a3b8; font-size: 13px; }
     </style>
 
-    <div style="max-width:720px;">
-        <div style="margin-bottom:28px;">
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Create New Batch</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Set up a new tuition class and assign a teacher.</p>
+    <div class="max-w-3xl w-full">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Create New Batch</h1>
+            <p class="text-gray-500">Set up a new tuition class and assign a teacher.</p>
         </div>
 
         <form action="{{ route('tuition-classes.store') }}" method="POST" id="batchForm">
             @csrf
-            <div class="card" style="margin-bottom:20px;">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="card mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     {{-- Batch Name --}}
-                    <div style="grid-column:1/3;">
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Batch / Class Name *</label>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Batch / Class Name *</label>
                         <input type="text" name="name" class="input-field" required value="{{ old('name') }}" placeholder="e.g. Grade 12 – Commerce A">
-                        @error('name') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
+                        @error('name') <p class="text-rose-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     {{-- Subject Multi-Select --}}
-                    <div style="grid-column:1/3;">
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Subjects * <span style="font-weight:400; color:#94a3b8;">(select one or more)</span></label>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Subjects * <span class="font-normal text-gray-400">(select one or more)</span></label>
                         <div class="ms-wrapper" id="subject-ms">
                             <div class="ms-trigger" onclick="toggleMS('subject-ms')">
                                 <span class="ms-placeholder" id="subject-ms-placeholder">Select subjects…</span>
@@ -134,7 +134,7 @@
 
                     {{-- Branch Multi-Select --}}
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Branch <span style="font-weight:400; color:#94a3b8;">(select one or more)</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Branch <span class="font-normal text-gray-400">(select one or more)</span></label>
                         <div class="ms-wrapper" id="branch-ms">
                             <div class="ms-trigger" onclick="toggleMS('branch-ms')">
                                 <span class="ms-placeholder" id="branch-ms-placeholder">Select branches…</span>
@@ -154,7 +154,7 @@
 
                     {{-- Teacher --}}
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Assign Teacher</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Assign Teacher</label>
                         <select name="teacher_id" class="input-field">
                             <option value="">— Not Assigned —</option>
                             @foreach($teachers as $teacher)
@@ -167,26 +167,26 @@
 
                     {{-- Schedule --}}
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">Schedule / Timing</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Schedule / Timing</label>
                         <input type="text" name="schedule_info" class="input-field" value="{{ old('schedule_info') }}" placeholder="e.g. Mon/Wed/Fri – 4:00 PM to 5:30 PM">
                     </div>
 
                     {{-- Class Start Time (for absence cron job) --}}
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:8px;">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Class Start Time
-                            <span style="font-weight:400; color:#94a3b8;">(for absent email — sent 30 min after)</span>
+                            <span class="font-normal text-gray-400">(for absent email — sent 30 min after)</span>
                         </label>
                         <input type="time" name="class_time" class="input-field" value="{{ old('class_time') }}"
                                style="max-width:200px;">
-                        @error('class_time') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p> @enderror
+                        @error('class_time') <p class="text-rose-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
             </div>
 
-            <div style="display:flex; gap:12px;">
-                <button type="submit" class="btn-primary">Create Batch</button>
-                <a href="{{ route('tuition-classes.index') }}" class="btn-secondary">Cancel</a>
+            <div class="flex flex-col sm:flex-row gap-4 justify-end">
+                <a href="{{ route('tuition-classes.index') }}" class="btn-secondary w-full sm:w-auto text-center order-2 sm:order-1">Cancel</a>
+                <button type="submit" class="btn-primary w-full sm:w-auto order-1 sm:order-2">Create Batch</button>
             </div>
         </form>
     </div>

@@ -6,6 +6,8 @@ use App\Models\Attendance;
 use App\Models\Student;
 use App\Models\TuitionClass;
 use App\Mail\AttendanceAbsentMail;
+use App\Mail\AttendancePresentMail;
+use App\Mail\AttendanceLateMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -44,32 +46,65 @@ class AttendanceController extends Controller
         ]);
 
         foreach ($request->attendance as $student_id => $status) {
+            $attendance = Attendance::where([
+                'student_id' => $student_id,
+                'tuition_class_id' => $request->tuition_class_id,
+                'date' => $request->date,
+            ])->first();
+
+            $updateData = [
+                'status' => $status,
+                'user_id' => auth()->id(),
+            ];
+
+            // If status changed, reset the notification flag to allow a new email
+            if ($attendance && $attendance->status !== $status) {
+                $updateData['notified_at'] = null;
+            }
+
             Attendance::updateOrCreate(
                 [
                     'student_id' => $student_id,
                     'tuition_class_id' => $request->tuition_class_id,
                     'date' => $request->date,
                 ],
-                [
-                    'status' => $status,
-                    'user_id' => auth()->id(),
-                ]
+                $updateData
             );
         }
 
-        // Send absent email notifications
+        // Send email notifications for students newly marked (or status changed)
         $className = TuitionClass::find($request->tuition_class_id)?->name ?? 'your class';
+        
+        // Eager load all students in the request
+        $students = Student::whereIn('id', array_keys($request->attendance))->get()->keyBy('id');
+
         foreach ($request->attendance as $student_id => $status) {
-            if ($status === 'absent') {
-                $student = Student::find($student_id);
-                $emailTo = $student?->guardian_email ?: $student?->email;
-                if ($student && $emailTo) {
+            $student = $students[$student_id] ?? null;
+            $attendance = Attendance::where([
+                'student_id' => $student_id,
+                'tuition_class_id' => $request->tuition_class_id,
+                'date' => $request->date,
+            ])->first();
+
+            // Only send if not already notified for this status
+            if ($student && $attendance && !$attendance->notified_at) {
+                $emailTo = $student->guardian_email ?: $student->email;
+                if ($emailTo) {
                     try {
-                        Mail::to($emailTo)->send(new AttendanceAbsentMail(
-                            $student,
-                            $request->date,
-                            $className
-                        ));
+                        $mailable = match($status) {
+                            'absent'  => new AttendanceAbsentMail($student, $request->date, $className),
+                            'present' => new AttendancePresentMail($student, $request->date, $className),
+                            'late'    => new AttendanceLateMail($student, $request->date, $className),
+                            default   => null
+                        };
+
+                        if ($mailable) {
+                            // Use send() for immediate delivery at the time of attendance
+                            Mail::to($emailTo)->send($mailable);
+                            
+                            // Mark as notified
+                            $attendance->update(['notified_at' => now()]);
+                        }
                     } catch (\Exception $e) {
                         \Log::warning("Attendance email failed for student {$student_id}: " . $e->getMessage());
                     }

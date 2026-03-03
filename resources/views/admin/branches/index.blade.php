@@ -1,15 +1,16 @@
 <x-admin-layout>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Branches</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Manage tuition centre locations</p>
+            <h1 class="text-2xl font-bold text-gray-900">Branches</h1>
+            <p class="text-gray-500">Manage tuition centre locations</p>
         </div>
-        <a href="{{ route('branches.create') }}" class="btn-primary">+ Add Branch</a>
+        <a href="{{ route('branches.create') }}" class="btn-primary inline-flex justify-center">+ Add Branch</a>
     </div>
 
-    <div class="card" style="padding:0; overflow:hidden;">
-        <table>
-            <thead>
+    <div class="card p-0 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[800px]">
+                <thead>
                 <tr>
                     <th>#</th>
                     <th>Branch Name</th>
@@ -44,13 +45,13 @@
                             @endif
                         </td>
                         <td>
-                            <div style="display:flex; gap:8px; align-items:center;">
-                                <a href="{{ route('branches.edit', $branch) }}" class="btn-secondary"
+                            <div class="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+                                <a href="{{ route('branches.edit', $branch) }}" class="btn-secondary whitespace-nowrap"
                                     style="padding:6px 14px; font-size:13px;">Edit</a>
                                 <form action="{{ route('branches.destroy', $branch) }}" method="POST"
-                                    onsubmit="return confirm('Delete this branch?')">
+                                    onsubmit="return confirm('Delete this branch?')" class="m-0">
                                     @csrf @method('DELETE')
-                                    <button type="submit"
+                                    <button type="submit" class="whitespace-nowrap"
                                         style="padding:6px 14px; font-size:13px; background:#fff1f2; color:#e11d48; border:1.5px solid #fecdd3; border-radius:10px; cursor:pointer; font-weight:600;">Delete</button>
                                 </form>
                             </div>
@@ -66,4 +67,5 @@
             </tbody>
         </table>
     </div>
+</div>
 </x-admin-layout>

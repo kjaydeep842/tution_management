@@ -1,77 +1,69 @@
 <x-admin-layout>
-    <div style="margin-bottom:28px; display:flex; justify-content:space-between; align-items:center;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">Edit Parent</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Update parent account details and student associations.
-            </p>
+            <h1 class="text-2xl font-bold text-gray-900">Edit Parent</h1>
+            <p class="text-gray-500">Update parent account details and student associations.</p>
         </div>
-        <a href="{{ route('admin.parents.index') }}" class="btn-secondary">← Back</a>
+        <a href="{{ route('admin.parents.index') }}" class="btn-secondary whitespace-nowrap">← Back</a>
     </div>
 
     <form action="{{ route('admin.parents.update', $parent) }}" method="POST">
         @csrf
         @method('PUT')
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {{-- Account Details --}}
             <div class="card">
-                <h2
-                    style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                <h2 class="text-base font-bold text-gray-700 mb-5 pb-3 border-b border-gray-100">
                     Account Details</h2>
-                <div style="display:flex; flex-direction:column; gap:16px;">
+                <div class="flex flex-col gap-4">
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Full
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Full
                             Name *</label>
                         <input type="text" name="name" class="input-field" required
                             value="{{ old('name', $parent->name) }}" placeholder="e.g. John Doe">
-                        @error('name') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p>
+                        @error('name') <p class="text-rose-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Email
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email
                             Address *</label>
                         <input type="email" name="email" class="input-field" required
                             value="{{ old('email', $parent->email) }}" placeholder="parent@example.com">
-                        @error('email') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p>
+                        @error('email') <p class="text-rose-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Mobile
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Mobile
                             Number</label>
                         <input type="text" name="phone" class="input-field" value="{{ old('phone', $parent->phone) }}"
                             placeholder="+91 98765 43210">
-                        @error('phone') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p>
+                        @error('phone') <p class="text-rose-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
             {{-- Security & Association --}}
-            <div style="display:flex; flex-direction:column; gap:24px;">
+            <div class="flex flex-col gap-6">
                 <div class="card">
-                    <h2
-                        style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    <h2 class="text-base font-bold text-gray-700 mb-5 pb-3 border-b border-gray-100">
                         Security</h2>
-                    <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="flex flex-col gap-4">
                         <div>
-                            <label
-                                style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">New
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">New
                                 Password</label>
                             <input type="password" name="password" class="input-field"
                                 placeholder="Leave blank to keep current">
-                            <p style="color:#64748b; font-size:11px; margin-top:4px;">Only enter a password if you want
+                            <p class="text-gray-400 text-[11px] mt-1">Only enter a password if you want
                                 to change it.</p>
-                            @error('password') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}
+                            @error('password') <p class="text-rose-600 text-xs mt-1">{{ $message }}
                             </p> @enderror
                         </div>
                         <div>
-                            <label
-                                style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Confirm
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm
                                 Password</label>
                             <input type="password" name="password_confirmation" class="input-field">
                         </div>
@@ -79,38 +71,34 @@
                 </div>
 
                 <div class="card">
-                    <h2
-                        style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    <h2 class="text-base font-bold text-gray-700 mb-5 pb-3 border-b border-gray-100">
                         Associate Students</h2>
                     <div>
-                        <label
-                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Select
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Select
                             Students</label>
-                        <div
-                            style="max-height: 200px; overflow-y: auto; padding: 10px; background: #f8fafc; border-radius: 12px; border: 1.5px solid #e2e8f0;">
+                        <div class="max-h-[200px] overflow-y-auto p-3 bg-gray-50 rounded-xl border-1.5 border-gray-200">
                             @php $linkedIds = $parent->students->pluck('id')->toArray(); @endphp
                             @forelse($students as $student)
-                                <label
-                                    style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                                <label class="flex items-center gap-2 mb-2 cursor-pointer">
                                     <input type="checkbox" name="student_ids[]" value="{{ $student->id }}" {{ in_array($student->id, old('student_ids', $linkedIds)) ? 'checked' : '' }}
-                                        style="width: 16px; height: 16px; accent-color: #6366f1;">
-                                    <span style="font-size: 14px; color: #374151;">{{ $student->full_name }}
+                                        class="w-4 h-4 accent-indigo-600">
+                                    <span class="text-sm text-gray-700">{{ $student->full_name }}
                                         ({{ $student->tuitionClass->name }})</span>
                                 </label>
                             @empty
-                                <p style="font-size:13px; color:#64748b; font-style:italic;">No students available.</p>
+                                <p class="text-sm text-gray-400 italic">No students available.</p>
                             @endforelse
                         </div>
-                        @error('student_ids') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}
+                        @error('student_ids') <p class="text-rose-600 text-xs mt-1">{{ $message }}
                         </p> @enderror
                     </div>
                 </div>
             </div>
         </div>
 
-        <div style="display:flex; gap:12px;">
-            <button type="submit" class="btn-primary">Update Parent Account</button>
-            <a href="{{ route('admin.parents.index') }}" class="btn-secondary">Cancel</a>
+        <div class="flex flex-col sm:flex-row gap-4 justify-end">
+            <a href="{{ route('admin.parents.index') }}" class="btn-secondary w-full sm:w-auto text-center order-2 sm:order-1">Cancel</a>
+            <button type="submit" class="btn-primary w-full sm:w-auto order-1 sm:order-2">Update Parent Account</button>
         </div>
     </form>
 </x-admin-layout>

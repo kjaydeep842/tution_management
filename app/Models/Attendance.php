@@ -11,7 +11,12 @@ class Attendance extends Model
         'tuition_class_id',
         'date',
         'status',
-        'user_id'
+        'user_id',
+        'notified_at',
+    ];
+
+    protected $casts = [
+        'notified_at' => 'datetime',
     ];
 
     public function student()
