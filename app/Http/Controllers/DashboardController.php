@@ -19,6 +19,15 @@ class DashboardController extends Controller
             'pending_fees' => Fee::where('status', 'unpaid')->sum('amount'),
         ];
 
-        return view('dashboard', compact('stats'));
+        $recentInquiries = Inquiry::where('status', 'pending')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $todayAttendanceCount = \App\Models\Attendance::where('date', now()->toDateString())
+            ->where('status', 'present')
+            ->count();
+
+        return view('dashboard', compact('stats', 'recentInquiries', 'todayAttendanceCount'));
     }
 }

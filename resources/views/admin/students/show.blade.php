@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {{-- Personal Info --}}
         <div class="card">
@@ -22,33 +22,33 @@
                 </svg>
                 Personal Information
             </h2>
-            <div style="display:flex; flex-direction:column; gap:14px;">
+            <div class="flex flex-col gap-3.5">
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Full Name</span>
                     <span style="font-size:14px; color:#0f172a; font-weight:600;">{{ $student->full_name }}</span>
                 </div>
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Date of Birth</span>
                     <span
                         style="font-size:14px; color:#0f172a; font-weight:600;">{{ $student->dob ? \Carbon\Carbon::parse($student->dob)->format('d M Y') : '—' }}</span>
                 </div>
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Gender</span>
                     <span
                         style="font-size:14px; color:#0f172a; font-weight:600;">{{ $student->gender ? ucfirst($student->gender) : '—' }}</span>
                 </div>
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Email</span>
                     <span style="font-size:14px; color:#0f172a; font-weight:600;">{{ $student->email ?? '—' }}</span>
                 </div>
-                <div style="display:flex; justify-content:space-between;">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Address</span>
-                    <span
-                        style="font-size:14px; color:#0f172a; font-weight:600; text-align:right; max-width:220px;">{{ $student->address ?? '—' }}</span>
+                    <span style="font-size:14px; color:#0f172a; font-weight:600; text-align:right;"
+                        class="sm:max-w-[220px]">{{ $student->address ?? '—' }}</span>
                 </div>
             </div>
         </div>
@@ -63,25 +63,25 @@
                 </svg>
                 Guardian &amp; Class
             </h2>
-            <div style="display:flex; flex-direction:column; gap:14px;">
+            <div class="flex flex-col gap-3.5">
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Guardian Name</span>
                     <span style="font-size:14px; color:#0f172a; font-weight:600;">{{ $student->guardian_name }}</span>
                 </div>
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Guardian Phone</span>
                     <span
                         style="font-size:14px; color:#0f172a; font-weight:600;">{{ $student->guardian_phone ?? '—' }}</span>
                 </div>
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Roll No.</span>
                     <span style="font-size:14px; color:#0f172a; font-weight:600;">{{ $student->roll_no ?? '—' }}</span>
                 </div>
                 <div
-                    style="display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
+                    class="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 border-b border-gray-100 gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Batch / Class</span>
                     <span style="font-size:14px; color:#0f172a; font-weight:600;">
                         @if($student->tuitionClass)
@@ -91,16 +91,16 @@
                         @endif
                     </span>
                 </div>
-                <div style="display:flex; justify-content:space-between;">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                     <span style="font-size:13px; color:#94a3b8; font-weight:500;">Notes</span>
-                    <span
-                        style="font-size:14px; color:#0f172a; font-weight:600; text-align:right; max-width:220px;">{{ $student->notes ?? '—' }}</span>
+                    <span style="font-size:14px; color:#0f172a; font-weight:600; text-align:right;"
+                        class="sm:max-w-[220px]">{{ $student->notes ?? '—' }}</span>
                 </div>
             </div>
         </div>
 
         {{-- Parent Account --}}
-        <div class="card" style="grid-column:1/3;">
+        <div class="card lg:col-span-2">
             <h2
                 style="font-size:15px; font-weight:700; color:#374151; margin:0 0 16px; display:flex; align-items:center; gap:8px;">
                 <svg width="18" height="18" fill="none" stroke="#6366f1" stroke-width="2" viewBox="0 0 24 24">
@@ -133,9 +133,9 @@
                     and more on the parent portal.
                 </p>
                 <form action="{{ route('students.create-parent', $student) }}" method="POST"
-                    style="display:flex; gap:10px; align-items:flex-end;">
+                    class="flex flex-col sm:flex-row gap-4 items-end">
                     @csrf
-                    <div style="flex:1;">
+                    <div class="w-full sm:flex-1">
                         <label
                             style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Guardian
                             Email Address</label>
@@ -147,7 +147,8 @@
                             <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p>
                         @enderror
                     </div>
-                    <button type="submit" class="btn-primary" style="white-space:nowrap;">
+                    <button type="submit" class="btn-primary w-full sm:w-auto text-center justify-center"
+                        style="white-space:nowrap;">
                         🔑 Create Parent Login
                     </button>
                 </form>

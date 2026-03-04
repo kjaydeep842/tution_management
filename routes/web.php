@@ -79,6 +79,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/performance-reports/{student}/create', [App\Http\Controllers\PerformanceReportController::class, 'create'])->name('performance-reports.create');
     Route::post('/performance-reports/{student}', [App\Http\Controllers\PerformanceReportController::class, 'store'])->name('performance-reports.store');
     Route::get('/performance-reports/{report}/download', [App\Http\Controllers\PerformanceReportController::class, 'download'])->name('performance-reports.download');
+
+    // Payment Verification
+    Route::get('/payment-requests', [\App\Http\Controllers\Admin\PaymentRequestController::class, 'index'])->name('payment-requests.index');
+    Route::post('/payment-requests/{paymentRequest}/approve', [\App\Http\Controllers\Admin\PaymentRequestController::class, 'approve'])->name('payment-requests.approve');
+    Route::post('/payment-requests/{paymentRequest}/reject', [\App\Http\Controllers\Admin\PaymentRequestController::class, 'reject'])->name('payment-requests.reject');
 });
 
 // Parent Portal (separate middleware group)
@@ -100,6 +105,10 @@ Route::middleware(['auth', 'verified', 'parent.portal'])->prefix('parent')->name
         Route::get('/create', [\App\Http\Controllers\Parent\GuidanceController::class, 'create'])->name('guidance.create');
         Route::post('/', [\App\Http\Controllers\Parent\GuidanceController::class, 'store'])->name('guidance.store');
     });
+
+    // Fee Payment Notifications
+    Route::get('/fees/{fee}/notify', [\App\Http\Controllers\ParentController::class, 'showPaymentRequestForm'])->name('fees.notify');
+    Route::post('/fees/{fee}/notify', [\App\Http\Controllers\ParentController::class, 'storePaymentRequest'])->name('fees.store-notify');
     Route::get('/profile', [\App\Http\Controllers\ParentController::class, 'profile'])->name('profile');
     Route::post('/profile', [\App\Http\Controllers\ParentController::class, 'updateProfile'])->name('profile.update');
 });

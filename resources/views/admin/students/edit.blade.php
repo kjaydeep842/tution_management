@@ -9,15 +9,15 @@
 
     <form action="{{ route('students.update', $student) }}" method="POST" style="max-w:900px;">
         @csrf @method('PUT')
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
             {{-- Personal Details --}}
             <div class="card">
                 <h2
                     style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
                     Personal Details</h2>
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="flex flex-col gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label
                                 style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">First
@@ -25,7 +25,8 @@
                             <input type="text" name="first_name" class="input-field" required
                                 value="{{ old('first_name', $student->first_name) }}">
                             @error('first_name') <p style="color:#e11d48; font-size:12px; margin-top:4px;">
-                            {{ $message }}</p> @enderror
+                                {{ $message }}
+                            </p> @enderror
                         </div>
                         <div>
                             <label
@@ -44,7 +45,7 @@
                             placeholder="student@example.com">
                     </div>
 
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label
                                 style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Date
@@ -76,12 +77,12 @@
             </div>
 
             {{-- Academic & Guardian --}}
-            <div style="display:flex; flex-direction:column; gap:24px;">
+            <div class="flex flex-col gap-6">
                 <div class="card">
                     <h2
                         style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
                         Academic Details</h2>
-                    <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="flex flex-col gap-4">
                         <div>
                             <label
                                 style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Assign
@@ -95,7 +96,8 @@
                                 @endforeach
                             </select>
                             @error('tuition_class_id') <p style="color:#e11d48; font-size:12px; margin-top:4px;">
-                            {{ $message }}</p> @enderror
+                                {{ $message }}
+                            </p> @enderror
                         </div>
                         <div>
                             <label
@@ -117,7 +119,7 @@
                     <h2
                         style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
                         Guardian Details</h2>
-                    <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="flex flex-col gap-4">
                         <div>
                             <label
                                 style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Guardian
@@ -125,7 +127,8 @@
                             <input type="text" name="guardian_name" class="input-field" required
                                 value="{{ old('guardian_name', $student->guardian_name) }}">
                             @error('guardian_name') <p style="color:#e11d48; font-size:12px; margin-top:4px;">
-                            {{ $message }}</p> @enderror
+                                {{ $message }}
+                            </p> @enderror
                         </div>
                         <div>
                             <label
@@ -134,7 +137,8 @@
                             <input type="text" name="guardian_phone" class="input-field" required
                                 value="{{ old('guardian_phone', $student->guardian_phone) }}">
                             @error('guardian_phone') <p style="color:#e11d48; font-size:12px; margin-top:4px;">
-                            {{ $message }}</p> @enderror
+                                {{ $message }}
+                            </p> @enderror
                         </div>
                     </div>
                 </div>

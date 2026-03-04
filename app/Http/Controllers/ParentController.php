@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fee;
 use App\Models\Student;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
@@ -41,8 +42,11 @@ class ParentController extends Controller
             ->get();
 
         // Fees summary
-        $feesDue = $student->fees->where('status', '!=', 'paid')->sum('amount');
-        $feesPaid = $student->fees->where('status', 'paid')->sum('amount');
+        $fees = $student->fees()->with('payments')->get();
+        $totalAmount = $fees->sum('amount');
+        $totalPaid = $fees->flatMap->payments->sum('amount');
+        $feesDue = $totalAmount - $totalPaid;
+        $feesPaid = $totalPaid;
 
         // Progress Reports (Recent Performance)
         $performanceReports = \App\Models\PerformanceReport::where('student_id', $student->id)
@@ -125,8 +129,13 @@ class ParentController extends Controller
     public function fees()
     {
         $student = $this->getStudent();
-        $fees = $student->fees()->orderBy('created_at', 'desc')->get();
-        return view('parent.fees', compact('student', 'fees'));
+        $fees = $student->fees()->with('payments')->orderBy('created_at', 'desc')->get();
+
+        $totalAmount = $fees->sum('amount');
+        $totalPaid = $fees->flatMap->payments->sum('amount');
+        $totalPending = $totalAmount - $totalPaid;
+
+        return view('parent.fees', compact('student', 'fees', 'totalAmount', 'totalPaid', 'totalPending'));
     }
 
     public function performance()
@@ -139,7 +148,7 @@ class ParentController extends Controller
         return view('parent.performance', compact('student', 'reports'));
     }
 
-    public function exams()
+    public function examMarks()
     {
         $student = $this->getStudent();
         $examMarks = \App\Models\ExamMark::with('exam.tuitionClass')
@@ -173,5 +182,53 @@ class ParentController extends Controller
         $user->save();
 
         return back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function showPaymentRequestForm(Fee $fee)
+    {
+        $student = $this->getStudent();
+        // Check if fee belongs to student
+        if ($fee->student_id !== $student->id) {
+            abort(403);
+        }
+
+        if ($fee->status === 'paid') {
+            return redirect()->route('parent.fees')->with('error', 'This fee is already fully paid.');
+        }
+
+        return view('parent.fees_notify', compact('student', 'fee'));
+    }
+
+    public function storePaymentRequest(Request $request, Fee $fee)
+    {
+        $student = $this->getStudent();
+        if ($fee->student_id !== $student->id) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1|max:' . ($fee->amount - $fee->payments()->sum('amount')),
+            'payment_mode' => 'required|string',
+            'txn_id' => 'nullable|string|max:255',
+            'receipt' => 'nullable|image|max:2048',
+        ]);
+
+        $data = [
+            'fee_id' => $fee->id,
+            'student_id' => $student->id,
+            'amount' => $validated['amount'],
+            'payment_mode' => $validated['payment_mode'],
+            'txn_id' => $validated['txn_id'] ?? null,
+            'status' => 'pending',
+        ];
+
+        if ($request->hasFile('receipt')) {
+            $path = $request->file('receipt')->store('receipts', 'public');
+            $data['receipt_path'] = $path;
+        }
+
+        \App\Models\PaymentRequest::create($data);
+
+        return redirect()->route('parent.fees')->with('success', 'Payment notification sent. Waiting for admin verification.');
     }
 }

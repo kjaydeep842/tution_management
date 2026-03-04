@@ -2,10 +2,10 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Registered Students</h1>
-            <p class="text-gray-500">View and manage all enrolled students.</p>
+            <p class="text-gray-500 text-sm sm:text-base">View and manage all enrolled students.</p>
         </div>
         <a href="{{ route('students.create') }}"
-            class="inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 active:transform active:scale-95">
+            class="inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 active:transform active:scale-95 w-full sm:w-auto">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
                 </path>
