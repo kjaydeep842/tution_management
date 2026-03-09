@@ -92,12 +92,12 @@ class SendMonthlyAttendanceReports extends Command
             // If linked to a user account, use that email too or instead? 
             // Usually guardian_email is the primary contact.
 
-            if ($email) {
-                try {
-                    Mail::to($email)->send(new AttendanceReportMail($data, $pdfContent));
-                } catch (\Exception $e) {
-                    $this->error("\nFailed to send email to {$email} for student #{$student->id}: " . $e->getMessage());
-                }
+            // Send WhatsApp notification
+            try {
+                $notificationService = new \App\Services\NotificationService();
+                $notificationService->sendMonthlyReportNotification($student, $data);
+            } catch (\Exception $e) {
+                $this->error("\nFailed to send WhatsApp to student #{$student->id}: " . $e->getMessage());
             }
 
             $bar->advance();

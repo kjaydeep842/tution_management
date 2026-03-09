@@ -76,20 +76,15 @@ class PerformanceReportController extends Controller
             'overall_performance' => $request->overall_performance,
         ]);
 
-        // Send Email to Parent
+        // Send WhatsApp Notification to Parent
         try {
-            $parent = $student->parentUser; // Assuming relationship or manual fetch
-            $email = $student->guardian_email ?? ($parent ? $parent->email : null);
-
-            if ($email) {
-                \Illuminate\Support\Facades\Mail::to($email)->send(new \App\Mail\PerformanceReportMail($report));
-            }
+            $notificationService = new \App\Services\NotificationService();
+            $notificationService->sendPerformanceReportNotification($report);
         } catch (\Exception $e) {
-            // Log error or handle gracefully
-            \Illuminate\Support\Facades\Log::error("Failed to send performance report email: " . $e->getMessage());
+            \Log::error("Failed to send performance report WhatsApp: " . $e->getMessage());
         }
 
-        return redirect()->route('performance-reports.index')->with('success', 'Performance report sent and email notification dispatched to parent.');
+        return redirect()->route('performance-reports.index')->with('success', 'Performance report sent via WhatsApp to parent.');
     }
 
     public function download(PerformanceReport $report)

@@ -91,7 +91,7 @@ class AttendanceController extends Controller
             if ($student && $attendance && !$attendance->notified_at) {
                 try {
                     $notificationService = new NotificationService();
-                    $notificationService->sendAttendanceNotification($attendance, ['email', 'whatsapp']);
+                    $notificationService->sendAttendanceNotification($attendance, ['whatsapp']);
 
                     // Mark as notified (already handled in sendAttendanceNotification would be better, but keeping consistency)
                     $attendance->update(['notified_at' => now()]);

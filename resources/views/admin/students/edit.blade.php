@@ -7,7 +7,8 @@
         <a href="{{ route('students.show', $student) }}" class="btn-secondary">← Back to Profile</a>
     </div>
 
-    <form action="{{ route('students.update', $student) }}" method="POST" style="max-w:900px;">
+    <form action="{{ route('students.update', $student) }}" method="POST" enctype="multipart/form-data"
+        style="max-w:900px;">
         @csrf @method('PUT')
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
@@ -17,6 +18,20 @@
                     style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
                     Personal Details</h2>
                 <div class="flex flex-col gap-4">
+                    <div class="mb-4">
+                        <label
+                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Profile
+                            Image</label>
+                        @if($student->profile_image)
+                            <div style="margin-bottom: 15px;">
+                                <img src="{{ asset('storage/' . $student->profile_image) }}" alt="Profile Image"
+                                    style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0;">
+                            </div>
+                        @endif
+                        <input type="file" name="profile_image" class="input-field" accept="image/*">
+                        @error('profile_image') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}
+                        </p> @enderror
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label

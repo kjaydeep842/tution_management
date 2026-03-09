@@ -12,9 +12,11 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentResultController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [InquiryController::class, 'home'])->name('home');
+Route::get('/all-results', [StudentResultController::class, 'showPublic'])->name('results.all');
 
 // Redirect /admin to dashboard
 Route::get('/admin', function () {
@@ -80,10 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/performance-reports/{student}', [App\Http\Controllers\PerformanceReportController::class, 'store'])->name('performance-reports.store');
     Route::get('/performance-reports/{report}/download', [App\Http\Controllers\PerformanceReportController::class, 'download'])->name('performance-reports.download');
 
-    // Payment Verification
-    Route::get('/payment-requests', [\App\Http\Controllers\Admin\PaymentRequestController::class, 'index'])->name('payment-requests.index');
-    Route::post('/payment-requests/{paymentRequest}/approve', [\App\Http\Controllers\Admin\PaymentRequestController::class, 'approve'])->name('payment-requests.approve');
-    Route::post('/payment-requests/{paymentRequest}/reject', [\App\Http\Controllers\Admin\PaymentRequestController::class, 'reject'])->name('payment-requests.reject');
+
 });
 
 // Parent Portal (separate middleware group)
@@ -106,9 +105,7 @@ Route::middleware(['auth', 'verified', 'parent.portal'])->prefix('parent')->name
         Route::post('/', [\App\Http\Controllers\Parent\GuidanceController::class, 'store'])->name('guidance.store');
     });
 
-    // Fee Payment Notifications
-    Route::get('/fees/{fee}/notify', [\App\Http\Controllers\ParentController::class, 'showPaymentRequestForm'])->name('fees.notify');
-    Route::post('/fees/{fee}/notify', [\App\Http\Controllers\ParentController::class, 'storePaymentRequest'])->name('fees.store-notify');
+
     Route::get('/profile', [\App\Http\Controllers\ParentController::class, 'profile'])->name('profile');
     Route::post('/profile', [\App\Http\Controllers\ParentController::class, 'updateProfile'])->name('profile.update');
 });
@@ -120,7 +117,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/{guidance}', [\App\Http\Controllers\Admin\GuidanceController::class, 'show'])->name('admin.guidance.show');
         Route::patch('/{guidance}', [\App\Http\Controllers\Admin\GuidanceController::class, 'respond'])->name('admin.guidance.respond');
     });
+    Route::resource('results', StudentResultController::class); // Added this line
+    // Fee Types
+    Route::post('/fee-types', [\App\Http\Controllers\FeeTypeController::class, 'store'])->name('fee-types.store');
 });
-
 
 require __DIR__ . '/auth.php';

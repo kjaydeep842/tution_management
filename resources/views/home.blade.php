@@ -6,9 +6,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;overflow-x:hidden}
-.container{max-width:1200px;margin:0 auto;padding:0 24px}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
+body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;overflow-x:hidden;width:100%;position:relative;margin:0;padding:0}
+.container{max-width:1200px;margin:0 auto;padding:0 24px;width:100%}
 .text-grad{background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
 .reveal.visible{opacity:1;transform:none}
@@ -39,7 +39,10 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;overflow-x:hid
 .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:80px 0;position:relative;z-index:1}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.09);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.14);border-radius:50px;padding:8px 20px;margin-bottom:28px}
 .hero-title{font-size:4rem;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-2px;margin-bottom:24px}
-.hero-sub{color:rgba(196,181,253,.85);font-size:18px;line-height:1.75;max-width:480px;margin-bottom:40px}
+.hero-sub{color:rgba(196,181,253,.85);font-size:18px;line-height:1.75;max-width:480px;margin-bottom:24px}
+.hero-list{list-style:none;margin-bottom:40px;display:flex;flex-direction:column;gap:12px}
+.hero-list-item{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.9);font-size:15px;font-weight:500}
+.hero-list-icon{width:22px;height:22px;background:rgba(167,139,250,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#a78bfa;font-size:12px;flex-shrink:0}
 .hero-btns{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px}
 .hero-trust{display:flex;align-items:center;gap:20px}
 .avatar-stack{display:flex}
@@ -120,14 +123,17 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;overflow-x:hid
 .picker-item .pi-name{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:5px}
 .picker-item .pi-subj{display:flex;flex-wrap:wrap;gap:5px}
 .pi-badge{font-size:11px;color:#6366f1;font-weight:600;background:#eef2ff;padding:2px 9px;border-radius:6px;display:inline-block}
-.pi-badge.more{color:#64748b;background:#f1f5f9}
+.pi-badge.more{color:#64748b;background:#f1f5f9;cursor:pointer;transition:all .2s}
+.pi-badge.more:hover{background:#e2e8f0;color:#0f172a}
+.hidden-subj{display:none}
 footer{background:#0f172a;color:#fff;padding:64px 0 36px}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px}
 .footer-link{color:#64748b;font-size:14px;text-decoration:none;transition:color .2s;display:block;margin-bottom:11px}
 .footer-link:hover{color:#a78bfa}
 @media(max-width:1024px){.hero-inner,.contact-grid,.footer-grid{grid-template-columns:1fr;gap:48px}.float-card-wrap{display:none}.features-grid{grid-template-columns:repeat(2,1fr)}.teachers-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.features-grid,.subjects-grid,.testi-grid,.stats-grid,.teachers-grid{grid-template-columns:1fr}.hero-title{font-size:2.6rem!important}.section-head h2{font-size:1.9rem!important}.nav-links{display:none}}
-@media(max-width:640px){.subjects-grid{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.hero-title{font-size:2rem!important}.hero-btns{flex-direction:column}}
+@media(max-width:768px){.features-grid,.subjects-grid,.testi-grid,.stats-grid,.teachers-grid{grid-template-columns:1fr}.hero-title{font-size:2.4rem!important}.section-head h2{font-size:1.8rem!important}.nav-links{display:none}.container{padding:0 16px}}
+@media(max-width:640px){.subjects-grid{grid-template-columns:repeat(2,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.hero-title{font-size:1.8rem!important}.hero-btns{flex-direction:column}}
+@media(max-width:480px){.nav-logo span{font-size:16px!important}.btn-cta{padding:8px 14px;font-size:12px}.btn-ghost{padding:6px 10px;font-size:12px}.navbar-inner{height:60px}.subjects-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -165,11 +171,16 @@ footer{background:#0f172a;color:#fff;padding:64px 0 36px}
 <span style="font-size:16px">🎓</span>
 <span style="color:#c4b5fd;font-size:13px;font-weight:600">Admissions Open · 2026–27Batch</span>
 </div>
-<h1 class="hero-title">Unlock Your <span style="background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Full Potential</span><br>Today.</h1>
-<p class="hero-sub">Expert tutors. Personalised plans. Proven results across
-@if($subjects->count()){{ $subjects->take(3)->join(', ') }} &amp; more
-@else Mathematics, Science, English &amp; more
-@endif — for students from Grade 1 to Grade 12.</p>
+<h1 class="hero-title">Delivering <span style="background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Top-Quality</span><br>Commerce Education.</h1>
+<p class="hero-sub">The Commerce Institute strives to deliver top-quality education under the expert guidance of our highly qualified faculty.</p>
+<ul class="hero-list">
+    <li class="hero-list-item"><div class="hero-list-icon">✓</div>Commitment to delivering high-quality commerce education</li>
+    <li class="hero-list-item"><div class="hero-list-icon">✓</div>Guidance from experienced and qualified experts</li>
+    <li class="hero-list-item"><div class="hero-list-icon">✓</div>Focus on academic excellence</li>
+    <li class="hero-list-item"><div class="hero-list-icon">✓</div>Structured and student-centered learning approach</li>
+    <li class="hero-list-item"><div class="hero-list-icon">✓</div>Professional mentorship and support</li>
+    <li class="hero-list-item"><div class="hero-list-icon">✓</div>Strong foundation for future success</li>
+</ul>
 <div class="hero-btns">
 <a href="#contact" class="btn-primary">Book Free Demo →</a>
 <a href="#subjects" class="btn-outline">Explore Courses</a>
@@ -332,6 +343,45 @@ $tspec=$teacher->subject_specialisation?$teacher->subject_specialisation:'Subjec
 @endif
 </div>
 </section>
+
+@if($results->count())
+<section id="results" class="subjects-section" style="background:#fff">
+    <div class="container">
+        <div class="section-head reveal">
+            <div class="slabel">✦ Our Success Stories</div>
+            <h2>Proud <span class="text-grad">Achievements</span></h2>
+            <p>Celebrating the hard work and excellence of our top performers.</p>
+        </div>
+        
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:24px;">
+            @foreach($results as $result)
+                <div class="reveal" style="background:#fff; border-radius:24px; overflow:hidden; border:1px solid #f1f5f9; transition:all .35s; text-align:center;">
+                    <div style="height:220px; position:relative; background:#f8fafc;">
+                        @if($result->image)
+                            <img src="{{ asset('storage/'.$result->image) }}" style="width:100%; height:100%; object-fit:cover;">
+                        @else
+                           <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#e2e8f0;font-size:50px">🎓</div>
+                        @endif
+                        <div style="position:absolute; top:12px; right:12px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; padding:6px 12px; border-radius:10px; font-weight:800; font-size:14px; box-shadow:0 4px 15px rgba(99,102,241,.3)">{{ $result->marks_percentage }}</div>
+                    </div>
+                    <div style="padding:20px;">
+                        <div style="font-size:11px; color:#6366f1; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">{{ $result->exam_name }}</div>
+                        <div style="font-size:16px; font-weight:800; color:#0f172a; margin-bottom:4px;">{{ $result->student_name }}</div>
+                        @if($result->achievement)
+                            <div style="font-size:12px; color:#64748b; font-weight:600;">{{ $result->achievement }}</div>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <div style="text-align:center; margin-top:48px;">
+            <a href="{{ route('results.all') }}" class="btn-primary" style="font-size:14px; padding:12px 28px;">View All Success Stories →</a>
+        </div>
+    </div>
+</section>
+@endif
+
 <section id="testimonials" class="testi-section">
 <div class="blob" style="width:480px;height:480px;background:#6366f1;top:-80px;right:-80px"></div>
 <div class="blob" style="width:380px;height:380px;background:#8b5cf6;bottom:-80px;left:-40px"></div>
@@ -423,11 +473,11 @@ $sparts=array_values(array_filter(array_map('trim',explode(',',$tc->subject??'')
 <div class="pi-name">{{ $tc->name }}</div>
 @if(count($sparts))
 <div class="pi-subj">
-@foreach(array_slice($sparts,0,3) as $sp)
-<span class="pi-badge">{{ $sp }}</span>
+@foreach($sparts as $idx => $sp)
+<span class="pi-badge {{ $idx >= 3 ? 'hidden-subj' : '' }}">{{ $sp }}</span>
 @endforeach
 @if(count($sparts)>3)
-<span class="pi-badge more">+{{ count($sparts)-3 }} more</span>
+<span class="pi-badge more" onclick="expandSubjs(event, this)">+{{ count($sparts)-3 }} more</span>
 @endif
 </div>
 @endif
@@ -512,6 +562,15 @@ var cObs=new IntersectionObserver(function(entries){
 entries.forEach(function(e){if(e.isIntersecting){var el=e.target;var tgt=parseInt(el.dataset.target,10);var sfx=el.dataset.suffix||'';if(tgt)animNum(el,tgt,sfx);cObs.unobserve(el);}});
 },{threshold:.5});
 document.querySelectorAll('.stat-num[data-target]').forEach(function(el){cObs.observe(el);});
+function expandSubjs(e, el) {
+    e.stopPropagation();
+    var p = el.parentElement;
+    p.querySelectorAll('.hidden-subj').forEach(function(s){
+        s.style.display = 'inline-block';
+        s.classList.remove('hidden-subj');
+    });
+    el.remove();
+}
 function togglePicker(){
 var dd=document.getElementById('pickerDropdown');
 var tr=document.getElementById('pickerTrigger');

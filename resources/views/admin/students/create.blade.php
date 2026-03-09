@@ -33,7 +33,7 @@
         $preClassId = old('tuition_class_id', $inquiry->tuition_class_id ?? '');
     @endphp
 
-    <form action="{{ route('students.store') }}" method="POST">
+    <form action="{{ route('students.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         {{-- Pass inquiry_id so controller can mark it converted --}}
@@ -49,6 +49,14 @@
                     style="font-size:15px; font-weight:700; color:#374151; margin:0 0 20px; padding-bottom:12px; border-bottom:1px solid #f1f5f9;">
                     Personal Details</h2>
                 <div class="flex flex-col gap-4">
+                    <div class="mb-4">
+                        <label
+                            style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Profile
+                            Image</label>
+                        <input type="file" name="profile_image" class="input-field" accept="image/*">
+                        @error('profile_image') <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}
+                        </p> @enderror
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label

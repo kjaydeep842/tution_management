@@ -79,8 +79,8 @@
 
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Teacher Suggestions (Managing Weak
-                        Subjects) *</label>
-                    <textarea name="suggestions" rows="6" required
+                        Subjects)</label>
+                    <textarea name="suggestions" rows="6"
                         placeholder="Write constructive feedback and how to improve weak subjects..."
                         class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-indigo-500">{{ old('suggestions') }}</textarea>
                     <p class="mt-2 text-xs text-gray-500">Provide specific steps for improvement.</p>

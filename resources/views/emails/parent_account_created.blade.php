@@ -152,8 +152,8 @@
             <div class="credentials-box">
                 <h3>Your Login Credentials</h3>
                 <div class="cred-row">
-                    <span class="cred-label">Email (Login ID)</span>
-                    <span class="cred-value">{{ $email }}</span>
+                    <span class="cred-label">Mobile Number (Login ID)</span>
+                    <span class="cred-value">{{ $phone }}</span>
                 </div>
                 <div class="cred-row">
                     <span class="cred-label">Temporary Password</span>

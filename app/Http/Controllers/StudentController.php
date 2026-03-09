@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -45,7 +46,12 @@ class StudentController extends Controller
             'address' => 'nullable|string',
             'roll_no' => 'nullable|string|max:50',
             'notes' => 'nullable|string',
+            'profile_image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('profile_image')) {
+            $validated['profile_image'] = $request->file('profile_image')->store('students', 'public');
+        }
 
         Student::create($validated);
 
@@ -83,7 +89,16 @@ class StudentController extends Controller
             'address' => 'nullable|string',
             'roll_no' => 'nullable|string|max:50',
             'notes' => 'nullable|string',
+            'profile_image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('profile_image')) {
+            // Delete old image
+            if ($student->profile_image) {
+                Storage::disk('public')->delete($student->profile_image);
+            }
+            $validated['profile_image'] = $request->file('profile_image')->store('students', 'public');
+        }
 
         $student->update($validated);
 
@@ -92,6 +107,9 @@ class StudentController extends Controller
 
     public function destroy(Student $student)
     {
+        if ($student->profile_image) {
+            Storage::disk('public')->delete($student->profile_image);
+        }
         $student->delete();
         return redirect()->route('students.index')->with('success', 'Student record deleted.');
     }
@@ -102,37 +120,38 @@ class StudentController extends Controller
             return back()->with('info', 'This student already has a parent login account.');
         }
 
-        $email = $request->validate([
-            'parent_email' => 'required|email|unique:users,email',
-        ])['parent_email'];
+        $validated = $request->validate([
+            'parent_phone' => 'required|string|unique:users,phone',
+            'parent_email' => 'nullable|email',
+        ]);
+
+        $phone = $validated['parent_phone'];
+        $email = $validated['parent_email'];
 
         $password = Str::random(10);
         $parentRole = Role::where('name', 'Parent')->first();
 
         $user = User::create([
             'name' => $student->guardian_name ?? $student->full_name . ' (Parent)',
-            'email' => $email,
-            'phone' => $student->guardian_phone,
+            'email' => $email, // Optional email
+            'phone' => $phone, // Required login ID
             'password' => Hash::make($password),
             'role_id' => $parentRole?->id,
         ]);
 
         $student->update(['user_id' => $user->id]);
 
-        // Send welcome email with credentials and portal URL
+        // Send WhatsApp notification
         try {
-            Mail::to($email)->send(new ParentAccountCreatedMail(
-                guardianName: $student->guardian_name ?? 'Guardian',
-                studentName: $student->full_name,
-                email: $email,
-                password: $password,
-                portalUrl: route('parent.dashboard')
-            ));
-            $msg = "Parent account created and login credentials emailed to {$email} successfully.";
+            $notificationService = new \App\Services\NotificationService();
+            $notificationService->sendAccountCreationNotification($student, $phone, $password);
+            $msg = "Parent account created and login credentials sent via WhatsApp to {$phone} successfully.";
         } catch (\Exception $e) {
-            \Log::warning('Parent welcome email failed: ' . $e->getMessage());
-            $msg = "Parent account created! Email: {$email} | Password: {$password} — (Email delivery failed, please share manually.)";
+            \Log::warning('Parent welcome WhatsApp failed: ' . $e->getMessage());
+            $msg = "Parent account created! ID: {$phone} | Password: {$password} — (WhatsApp delivery failed, please share manually.)";
         }
+
+        return back()->with('success', $msg);
 
         return back()->with('success', $msg);
     }

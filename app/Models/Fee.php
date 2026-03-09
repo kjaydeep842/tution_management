@@ -10,7 +10,6 @@ class Fee extends Model
         'student_id',
         'amount',
         'fee_type',
-        'due_date',
         'status',
         'invoice_no',
         'user_id'
@@ -29,10 +28,5 @@ class Fee extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
-    }
-
-    public function paymentRequests()
-    {
-        return $this->hasMany(PaymentRequest::class);
     }
 }

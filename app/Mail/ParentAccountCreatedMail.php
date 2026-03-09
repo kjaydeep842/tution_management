@@ -15,7 +15,7 @@ class ParentAccountCreatedMail extends Mailable
     public function __construct(
         public string $guardianName,
         public string $studentName,
-        public string $email,
+        public string $phone,
         public string $password,
         public string $portalUrl
     ) {

@@ -23,9 +23,9 @@
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Student</th>
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Due Date</th>
                         <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Action
+                        <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">
+                            Action
                         </th>
                     </tr>
                 </thead>
@@ -36,8 +36,6 @@
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $fee->student->full_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $fee->fee_type }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-gray-900">₹{{ number_format($fee->amount, 2) }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">
-                                {{ \Carbon\Carbon::parse($fee->due_date)->format('d M Y') }}</td>
                             <td class="px-6 py-4">
                                 @php
                                     $badge = ['unpaid' => 'bg-rose-50 text-rose-700', 'paid' => 'bg-green-50 text-green-700', 'partial' => 'bg-amber-50 text-amber-700'][$fee->status] ?? 'bg-gray-50 text-gray-700';
@@ -57,7 +55,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">No fee records found.</td>
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 italic">No fee records found.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -65,6 +63,6 @@
         </div>
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">{{ $fees->links() }}</div>
     </div>
-        <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">{{ $fees->links() }}</div>
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">{{ $fees->links() }}</div>
     </div>
 </x-admin-layout>

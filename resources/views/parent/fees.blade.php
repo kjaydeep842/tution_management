@@ -52,26 +52,16 @@
                                 <td style="padding:14px 20px; color:#10b981; font-weight:600;">₹{{ number_format($paid, 2) }}</td>
                                 <td style="padding:14px 20px; color:{{ $balance > 0 ? '#ef4444' : '#64748b' }}; font-weight:700;">₹{{ number_format($balance, 2) }}</td>
                                 <td style="padding:14px 20px;">
-                                    @php
-                                        $pendingPayment = $fee->paymentRequests->where('status', 'pending')->first();
-                                    @endphp
-
                                     @if($fee->status === 'paid' || $balance <= 0)
                                         <span style="background:#dcfce7; color:#166534; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700;">Fully Paid</span>
-                                    @elseif($pendingPayment)
-                                        <span style="background:#fef3c7; color:#92400e; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700;">Pending Verification</span>
                                     @elseif($paid > 0)
+
                                         <span style="background:#dbeafe; color:#1e40af; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700;">Partially Paid</span>
                                     @else
                                         <span style="background:#fee2e2; color:#991b1b; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700;">Unpaid</span>
                                     @endif
 
-                                    @if($fee->status !== 'paid' && !$pendingPayment && $balance > 0)
-                                        <a href="{{ route('parent.fees.notify', $fee) }}" 
-                                            style="display:inline-block; margin-left:8px; background:#6366f1; color:white; text-decoration:none; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:700;">
-                                            Notify Payment
-                                        </a>
-                                    @endif
+                                    
                                 </td>
                             </tr>
                         @endforeach

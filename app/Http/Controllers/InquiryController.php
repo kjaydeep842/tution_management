@@ -30,7 +30,9 @@ class InquiryController extends Controller
         $teacherCount = $teachers->count();
         $subjectCount = $subjects->count();
 
-        return view('home', compact('classes', 'teachers', 'subjects', 'studentCount', 'teacherCount', 'subjectCount'));
+        $results = \App\Models\StudentResult::where('is_active', true)->latest()->take(10)->get();
+
+        return view('home', compact('classes', 'teachers', 'subjects', 'studentCount', 'teacherCount', 'subjectCount', 'results'));
     }
 
     public function create()

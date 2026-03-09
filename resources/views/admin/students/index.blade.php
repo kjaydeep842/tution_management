@@ -32,10 +32,16 @@
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
-                                    <div
-                                        class="w-10 h-10 bg-indigo-100 text-indigo-700 flex items-center justify-center rounded-full font-bold text-sm">
-                                        {{ substr($student->first_name, 0, 1) }}{{ substr($student->last_name, 0, 1) }}
-                                    </div>
+                                    @if($student->profile_image)
+                                        <img src="{{ asset('storage/' . $student->profile_image) }}"
+                                            alt="{{ $student->full_name }}"
+                                            class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
+                                    @else
+                                        <div
+                                            class="w-10 h-10 bg-indigo-100 text-indigo-700 flex items-center justify-center rounded-full font-bold text-sm">
+                                            {{ substr($student->first_name, 0, 1) }}{{ substr($student->last_name, 0, 1) }}
+                                        </div>
+                                    @endif
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $student->full_name }}</div>
                                         <div class="text-xs text-gray-500">{{ $student->email ?? 'No email' }}</div>

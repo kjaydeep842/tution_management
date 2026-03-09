@@ -1,8 +1,20 @@
 <x-admin-layout>
     <div style="margin-bottom:24px; display:flex; justify-content:space-between; align-items:center;">
-        <div>
-            <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">{{ $student->full_name }}</h1>
-            <p style="color:#64748b; font-size:14px; margin:0;">Student Profile</p>
+        <div style="display:flex; align-items:center; gap:20px;">
+            @if($student->profile_image)
+                <img src="{{ asset('storage/' . $student->profile_image) }}" alt="{{ $student->full_name }}"
+                    style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            @else
+                <div
+                    style="width: 80px; height: 80px; border-radius: 50%; background: #eef2ff; color: #6366f1; display: flex; align-items:center; justify-content:center; font-size: 32px; font-weight: 800; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    {{ substr($student->first_name, 0, 1) }}{{ substr($student->last_name, 0, 1) }}
+                </div>
+            @endif
+            <div>
+                <h1 style="font-size:26px; font-weight:800; color:#0f172a; margin:0 0 4px;">{{ $student->full_name }}
+                </h1>
+                <p style="color:#64748b; font-size:14px; margin:0;">Student Profile</p>
+            </div>
         </div>
         <div style="display:flex; gap:10px;">
             <a href="{{ route('students.edit', $student) }}" class="btn-primary">Edit Student</a>
@@ -138,11 +150,21 @@
                     <div class="w-full sm:flex-1">
                         <label
                             style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Guardian
-                            Email Address</label>
-                        <input type="email" name="parent_email" required
+                            Mobile Number *</label>
+                        <input type="text" name="parent_phone" required
+                            style="width:100%; padding:10px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:14px; outline:none; box-sizing:border-box; margin-bottom:10px;"
+                            value="{{ old('parent_phone', $student->guardian_phone ?? '') }}"
+                            placeholder="Enter mobile number">
+                        @error('parent_phone')
+                            <p style="color:#e11d48; font-size:12px; margin-top:4px; margin-bottom:10px;">{{ $message }}</p>
+                        @enderror
+
+                        <label
+                            style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:6px;">Guardian
+                            Email (Optional for notification)</label>
+                        <input type="email" name="parent_email"
                             style="width:100%; padding:10px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:14px; outline:none; box-sizing:border-box;"
-                            value="{{ old('parent_email', $student->guardian_email ?? '') }}"
-                            placeholder="parent@email.com">
+                            value="{{ old('parent_email', $student->email ?? '') }}" placeholder="parent@email.com">
                         @error('parent_email')
                             <p style="color:#e11d48; font-size:12px; margin-top:4px;">{{ $message }}</p>
                         @enderror
