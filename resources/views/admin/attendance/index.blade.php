@@ -1,7 +1,13 @@
 <x-admin-layout>
-    <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-900">Mark Attendance</h1>
-        <p class="text-gray-500">Select a class and date to record student attendance.</p>
+    <div class="mb-8 flex justify-between items-center flex-wrap gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Mark Attendance</h1>
+            <p class="text-gray-500">Select a class and date to record student attendance.</p>
+        </div>
+        <a href="{{ route('attendance.report') }}" class="px-6 py-2 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl shadow-sm hover:bg-gray-50 flex items-center gap-2">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16A2 2 0 0 0 22 20V4a2 2 0 0 0-2-2H8l-4 4v14a2 2 0 0 0 2 2z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 18V10"></path><path d="M12 18v-4"></path><path d="M16 18v-2"></path></svg>
+            View Attendance Report
+        </a>
     </div>
 
     <!-- Filter Bar -->

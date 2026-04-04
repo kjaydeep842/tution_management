@@ -62,4 +62,23 @@ class Student extends Model
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    protected static function booted()
+    {
+        static::deleting(function ($student) {
+            // Delete all related records to prevent foreign key errors
+            $student->attendances()->delete();
+            $student->assignmentSubmissions()->delete();
+            $student->examMarks()->delete();
+            
+            // Delete fees and their payments
+            foreach ($student->fees as $fee) {
+                $fee->payments()->delete();
+                $fee->delete();
+            }
+            
+            // Delete performance reports
+            \App\Models\PerformanceReport::where('student_id', $student->id)->delete();
+        });
+    }
 }

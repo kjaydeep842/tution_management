@@ -239,7 +239,22 @@
 
         @if(count($reportStudents) > 0)
             <div class="card" style="overflow-x:auto;">
-                <h2 style="font-size:15px; font-weight:700; color:#374151; margin:0 0 16px;">Student-wise Attendance Grid</h2>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+                    <h2 style="font-size:15px; font-weight:700; color:#374151; margin:0;">Student-wise Attendance Grid</h2>
+                    @if($rt === 'monthly')
+                        <form action="{{ route('attendance.send-whatsapp-monthly-bulk') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="month" value="{{ request('month', now()->format('Y-m')) }}">
+                            @foreach($reportStudents as $rs)
+                                <input type="hidden" name="student_ids[]" value="{{ $rs->id }}">
+                            @endforeach
+                            <button type="submit" style="background:#25D366; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:700; cursor:pointer; display:flex; gap:6px; align-items:center;">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                                Send PDF Report To All
+                            </button>
+                        </form>
+                    @endif
+                </div>
                 <table style="width:100%; border-collapse:collapse; min-width:600px;">
                     <thead>
                         <tr>
@@ -265,6 +280,11 @@
                             <th
                                 style="padding:8px 12px; font-size:12px; color:#94a3b8; text-align:center; border-bottom:1px solid #f1f5f9;">
                                 %</th>
+                            @if($rt === 'monthly')
+                            <th
+                                style="padding:8px 12px; font-size:12px; color:#94a3b8; text-align:center; border-bottom:1px solid #f1f5f9;">
+                                WA</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -301,6 +321,16 @@
                                     <span
                                         style="font-size:13px; font-weight:700; color:{{ $pct >= 75 ? '#10b981' : ($pct >= 50 ? '#f59e0b' : '#ef4444') }};">{{ $pct }}%</span>
                                 </td>
+                                @if($rt === 'monthly')
+                                <td style="text-align:center; padding: 4px;">
+                                    <form action="{{ route('attendance.send-whatsapp-monthly') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="student_id" value="{{ $s->id }}">
+                                        <input type="hidden" name="month" value="{{ request('month', now()->format('Y-m')) }}">
+                                        <button type="submit" style="background:#25D366; color:#fff; border:none; border-radius:6px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer;" title="Send WhatsApp PDF">Send</button>
+                                    </form>
+                                </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -322,6 +352,9 @@
                             <td style="text-align:center; color:#6366f1;">
                                 {{ $total > 0 ? round(($present / $total) * 100) : 0 }}%
                             </td>
+                            @if($rt === 'monthly')
+                            <td></td>
+                            @endif
                         </tr>
                     </tfoot>
                 </table>

@@ -11,6 +11,8 @@ use App\Mail\AttendanceLateMail;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
 class AttendanceController extends Controller
@@ -81,11 +83,12 @@ class AttendanceController extends Controller
 
         foreach ($request->attendance as $student_id => $status) {
             $student = $students[$student_id] ?? null;
-            $attendance = Attendance::where([
-                'student_id' => $student_id,
-                'tuition_class_id' => $request->tuition_class_id,
-                'date' => $request->date,
-            ])->first();
+            $attendance = Attendance::with(['student', 'tuitionClass'])
+                ->where([
+                    'student_id'       => $student_id,
+                    'tuition_class_id' => $request->tuition_class_id,
+                    'date'             => $request->date,
+                ])->first();
 
             // Only send if not already notified for this status
             if ($student && $attendance && !$attendance->notified_at) {
@@ -93,7 +96,7 @@ class AttendanceController extends Controller
                     $notificationService = new NotificationService();
                     $notificationService->sendAttendanceNotification($attendance, ['whatsapp']);
 
-                    // Mark as notified (already handled in sendAttendanceNotification would be better, but keeping consistency)
+                    // Mark as notified
                     $attendance->update(['notified_at' => now()]);
                 } catch (\Exception $e) {
                     \Log::warning("Attendance notification failed for student {$student_id}: " . $e->getMessage());
@@ -197,5 +200,88 @@ class AttendanceController extends Controller
             'reportStudents',
             'request'
         ));
+    }
+
+    protected function generateAttendancePdfData(Student $student, $monthStr)
+    {
+        $targetMonth = Carbon::parse($monthStr);
+        $startOfMonth = $targetMonth->copy()->startOfMonth();
+        $endOfMonth = $targetMonth->copy()->endOfMonth();
+
+        $attendances = Attendance::where('student_id', $student->id)
+            ->whereBetween('date', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+            ->get()
+            ->keyBy('date');
+
+        $allDates = [];
+        $cursor = $startOfMonth->copy();
+        $today = Carbon::today();
+        $end = $endOfMonth->isFuture() ? $today : $endOfMonth; 
+        
+        while ($cursor->lte($end)) {
+            $allDates[$cursor->toDateString()] = $attendances->get($cursor->toDateString());
+            $cursor->addDay();
+        }
+
+        $total = count($allDates);
+        $present = $attendances->where('status', 'present')->count();
+        $absent = $attendances->where('status', 'absent')->count();
+        $pct = $total > 0 ? round(($present / $total) * 100) : 0;
+
+        return [
+            'student' => $student,
+            'attendances' => $allDates,
+            'monthName' => $targetMonth->format('F'),
+            'year' => $targetMonth->year,
+            'total' => $total,
+            'present' => $present,
+            'absent' => $absent,
+            'pct' => $pct
+        ];
+    }
+
+    public function sendMonthlyWhatsApp(Request $request)
+    {
+        $student = Student::findOrFail($request->student_id);
+        $month = $request->month ?? date('Y-m');
+        
+        $data = $this->generateAttendancePdfData($student, $month);
+        
+        $pdf = Pdf::loadView('pdf.attendance_pdf', $data);
+        $fileName = 'reports/attendance_' . $student->id . '_' . $month . '.pdf';
+        Storage::disk('public')->put($fileName, $pdf->output());
+        
+        $fullPath = storage_path('app/public/' . $fileName);
+        
+        $notificationService = app(NotificationService::class);
+        $notificationService->sendMonthlyReportNotificationPdf($student, $data, $fullPath);
+        
+        return back()->with('success', 'Monthly PDF Report sent to ' . $student->full_name);
+    }
+
+    public function sendMonthlyWhatsAppBulk(Request $request)
+    {
+        $studentIds = $request->student_ids;
+        $month = $request->month ?? date('Y-m');
+        $notificationService = app(NotificationService::class);
+        
+        if(!$studentIds) return back()->with('error', 'No students selected.');
+        
+        $count = 0;
+        foreach($studentIds as $id) {
+            $student = Student::find($id);
+            if(!$student) continue;
+            
+            $data = $this->generateAttendancePdfData($student, $month);
+            $pdf = Pdf::loadView('pdf.attendance_pdf', $data);
+            $fileName = 'reports/attendance_' . $student->id . '_' . $month . '.pdf';
+            Storage::disk('public')->put($fileName, $pdf->output());
+            $fullPath = storage_path('app/public/' . $fileName);
+            
+            $notificationService->sendMonthlyReportNotificationPdf($student, $data, $fullPath);
+            $count++;
+        }
+        
+        return back()->with('success', "Monthly PDF Reports sent to $count students.");
     }
 }

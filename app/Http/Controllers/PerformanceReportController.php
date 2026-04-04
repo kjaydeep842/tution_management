@@ -76,10 +76,17 @@ class PerformanceReportController extends Controller
             'overall_performance' => $request->overall_performance,
         ]);
 
+        // Generate PDF before sending notification
+        $report->load('student.tuitionClass', 'teacher');
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.performance.pdf', compact('report'));
+        $fileName = 'reports/performance_' . $report->id . '.pdf';
+        \Illuminate\Support\Facades\Storage::disk('public')->put($fileName, $pdf->output());
+        $pdfPath = storage_path('app/public/' . $fileName);
+
         // Send WhatsApp Notification to Parent
         try {
             $notificationService = new \App\Services\NotificationService();
-            $notificationService->sendPerformanceReportNotification($report);
+            $notificationService->sendPerformanceReportNotification($report, ['whatsapp'], $pdfPath);
         } catch (\Exception $e) {
             \Log::error("Failed to send performance report WhatsApp: " . $e->getMessage());
         }

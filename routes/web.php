@@ -57,7 +57,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/attendance/report', [AttendanceController::class, 'report'])->name('attendance.report');
-
+    Route::post('/attendance/send-whatsapp-monthly', [AttendanceController::class, 'sendMonthlyWhatsApp'])->name('attendance.send-whatsapp-monthly');
+    Route::post('/attendance/send-whatsapp-monthly-bulk', [AttendanceController::class, 'sendMonthlyWhatsAppBulk'])->name('attendance.send-whatsapp-monthly-bulk');
 
     // Academic
     Route::resource('assignments', AssignmentController::class);
